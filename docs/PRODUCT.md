@@ -20,10 +20,10 @@ Create a blackjack table that is satisfying to play repeatedly. The visual ident
 - Rapid input, resizing, and replay do not duplicate actions or leave cards in the wrong state.
 - Automated rule tests and real browser playthroughs both pass before release.
 
-## Open Product Decisions
+## First Implementation Decisions
 
-- Browser is the proposed first platform; Alim has not explicitly confirmed it.
-- The Deck and UI agent is producing original scalable art inspired by the selected reference; final court-card art still needs Alim's visual review.
-- Detailed split, split-aces, doubling, and shoe reset behavior in `RULES.md`.
+- Build the first version as a browser game with TypeScript, React, and Vite.
+- Use the original scalable deck Alim accepted on 2026-09-26.
+- Apply the detailed MVP defaults in `RULES.md`; revisit them if Alim requests a different house rule.
 
 Accounts, multiplayer, and real-money play are outside this release. Publishing follows a separate decision.

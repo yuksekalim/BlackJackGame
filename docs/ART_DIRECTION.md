@@ -18,6 +18,6 @@ The Deck and UI agent owns the quality fix. The selected production path is an o
 
 Do not use AI upscaling as the sole production plan; it cannot recover authentic line and lettering detail that is absent from an 87-pixel crop.
 
-## Prototype for Review
+## First-Release Deck
 
-The Deck and UI agent delivered `assets/cards/`: 52 original SVG faces, one uniform SVG back, a reproducible generator, an HTML gallery, and a PNG contact sheet. Dora rendered a number card, a court card, and the back at enlarged size, plus the full contact sheet at game-like size. The assets remain sharp; their court art is simpler and more stylized than the selected reference. Alim's visual review determines whether these portraits are acceptable or need further art direction before the deck is final.
+The Deck and UI agent delivered `assets/cards/`: 52 original SVG faces, one uniform SVG back, a reproducible generator, an HTML gallery, and a PNG contact sheet. Dora rendered a number card, a court card, and the back at enlarged size, plus the full contact sheet at game-like size. The assets remain sharp; their court art is simpler and more stylized than the selected reference. Alim accepted the deck for the first release on 2026-09-26.

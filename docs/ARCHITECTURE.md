@@ -1,6 +1,6 @@
-# Architecture Proposal
+# Architecture
 
-The browser application is proposed as TypeScript with Vite and React. Confirm the platform before scaffolding. Keep the rules engine framework-independent so it can be tested and reused.
+Build a browser application with TypeScript, Vite, and React. Keep the rules engine framework-independent so it can be tested and reused.
 
 ## Boundaries
 
@@ -9,12 +9,20 @@ The browser application is proposed as TypeScript with Vite and React. Confirm t
 3. **Motion (`src/motion/`):** consumes ordered game events and animates rendered cards/chips. Completion or cancellation returns the UI to the authoritative state. It never chooses outcomes.
 4. **Assets (`assets/cards/`):** original or licensed scalable card faces and one consistent back. A card component maps rank and suit to art.
 
-## Shared Contract to Define Before Parallel Coding
+## Shared Contract
 
-- Card, rank, suit, hand, wager, round phase, legal action, and result types.
-- Command inputs and ordered domain events such as `cardDealt`, `holeCardRevealed`, `handSettled`.
-- State snapshot semantics for interrupted animations and instant/reduced-motion mode.
-- Error behavior for illegal or repeated actions.
+`src/game/types.ts` defines the card, hand, state, action, and event types. Agents use those types without independently redefining them. The gameplay agent exports these functions from `src/game/index.ts`:
+
+- `createGame(options?: GameOptions): GameState`
+- `applyAction(state: GameState, action: GameAction, random?: () => number): GameTransition`
+- `getLegalActions(state: GameState): GameAction['type'][]`
+- `scoreHand(cards: Card[]): { total: number; soft: boolean; busted: boolean }`
+
+The shoe draws from index 0. `applyAction` returns a new authoritative state and ordered events. Invalid actions leave the state unchanged and return no events; controls also disable them with `getLegalActions`. Production shuffling uses a browser cryptographic random source. A test can inject a fixed shoe or random function.
+
+The Deck and UI agent builds `src/ui/BlackjackTable.tsx` with props `{ state, legalActions, onAction, speed, onSpeedChange }`. `onAction` accepts a `GameAction`. The main agent owns the small root `App.tsx` integration.
+
+The Motion agent builds `src/motion/AnimatedCard.tsx` and accompanying CSS. It accepts a `Card`, a stable card ID, a `hidden` flag for the dealer hole card, and a speed value of `normal`, `fast`, or `instant`. It loads the committed SVG assets and renders the same authoritative card immediately when motion is reduced or skipped. The UI agent uses this component for every visible card. Additional chip/result effects may use the ordered events. No motion component changes game state.
 
 ## Verification
 
