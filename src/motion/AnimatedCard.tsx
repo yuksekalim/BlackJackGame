@@ -23,11 +23,16 @@ export interface AnimatedCardProps {
   hidden?: boolean
   speed: 'normal' | 'fast' | 'instant'
   className?: string
+  /** False for already-dealt cards that move between lanes, such as the second split card. */
+  animateOnMount?: boolean
+  /** Change this token to replay the entrance for a deliberately re-dealt card identity. */
+  entranceKey?: string | number
 }
 
 interface DealState {
   identity: string
   speed: AnimatedCardProps['speed']
+  entranceKey?: string | number
 }
 
 interface FlipState extends DealState {
@@ -62,26 +67,19 @@ function finishAnimation(animation: Animation, animationRef: { current: Animatio
   }
 }
 
-function getSiblingDealDelay(wrapper: HTMLDivElement): number {
-  const slot = wrapper.closest('.bj-card-slot')
-  const slotParent = slot?.parentElement
+function getShoeOffset(wrapper: HTMLDivElement): { x: number; y: number } {
+  const table = wrapper.closest('.bj-table')
+  const shoe = table?.querySelector<HTMLElement>('[data-motion-shoe]')
+    ?? document.querySelector<HTMLElement>('[data-motion-shoe]')
+  const target = wrapper.getBoundingClientRect()
 
-  if (slot && slotParent) {
-    const siblingSlots = Array.from(slotParent.children).filter((child) => {
-      return child.classList.contains('bj-card-slot')
-    })
-    const slotIndex = siblingSlots.indexOf(slot)
-    if (slotIndex >= 0) return Math.min(slotIndex, 3) * 38
+  if (!shoe) return { x: -Math.max(target.width * 1.45, 92), y: -Math.max(target.height * 1.1, 78) }
+
+  const source = shoe.getBoundingClientRect()
+  return {
+    x: source.left + source.width / 2 - (target.left + target.width / 2),
+    y: source.top + source.height / 2 - (target.top + target.height / 2),
   }
-
-  const parent = wrapper.parentElement
-  if (!parent) return 0
-
-  const siblingCards = Array.from(parent.children).filter((child) => {
-    return child.classList.contains('animated-card')
-  })
-  const siblingIndex = siblingCards.indexOf(wrapper)
-  return Math.min(Math.max(siblingIndex, 0), 3) * 38
 }
 
 function getFaceUrl(card: Card): string {
@@ -101,6 +99,8 @@ export function AnimatedCard({
   hidden = false,
   speed,
   className,
+  animateOnMount = true,
+  entranceKey,
 }: AnimatedCardProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(readReducedMotionPreference)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -133,7 +133,10 @@ export function AnimatedCard({
     if (!wrapper) return
 
     const previous = dealStateRef.current
+    // Clearing an entrance token when the sequence completes must not replay
+    // the last card. Only a new explicit token requests another entrance.
     const identityChanged = previous?.identity !== identity
+      || (entranceKey !== undefined && previous?.entranceKey !== entranceKey)
     const activeAnimation = dealAnimationRef.current
     let continuedFrom: Keyframe | null = null
 
@@ -146,32 +149,47 @@ export function AnimatedCard({
     }
 
     cancelAnimation(dealAnimationRef)
-    dealStateRef.current = { identity, speed }
+    dealStateRef.current = { identity, speed, entranceKey }
 
     if (speed === 'instant' || prefersReducedMotion || typeof wrapper.animate !== 'function') return
+    if (identityChanged && !animateOnMount) return
     if (!identityChanged && !continuedFrom) return
 
+    const { x, y } = getShoeOffset(wrapper)
+    const arcLift = Math.min(74, Math.max(24, Math.abs(y) * 0.14))
     const to: Keyframe = {
       opacity: 1,
       transform: 'translate3d(0, 0, 0) rotate(0deg) scale(1)',
     }
     const from: Keyframe = identityChanged
       ? {
-          opacity: 0,
-          transform: 'translate3d(-34px, -42px, 0) rotate(-7deg) scale(0.95)',
+          opacity: 0.16,
+          filter: 'brightness(1.18) drop-shadow(0 17px 12px rgba(0, 0, 0, .34))',
+          transform: `translate3d(${x}px, ${y}px, 0) rotate(-15deg) scale(.78)`,
         }
       : continuedFrom!
-    const staggerDelay = getSiblingDealDelay(wrapper)
-    const animation = wrapper.animate([from, to], {
-      duration: speed === 'fast' ? 210 : 420,
-      delay: speed === 'fast' ? Math.round(staggerDelay / 2) : staggerDelay,
-      easing: 'cubic-bezier(0.18, 0.82, 0.24, 1)',
+    const middle: Keyframe = {
+      offset: 0.62,
+      opacity: 1,
+      filter: 'brightness(1.08) drop-shadow(0 12px 9px rgba(0, 0, 0, .3))',
+      transform: `translate3d(${x * 0.34}px, ${y * 0.34 - arcLift}px, 0) rotate(5deg) scale(1.045)`,
+    }
+    const landing: Keyframe = {
+      offset: 0.87,
+      opacity: 1,
+      filter: 'brightness(1.03) drop-shadow(0 7px 6px rgba(0, 0, 0, .28))',
+      transform: 'translate3d(0, -5px, 0) rotate(-1deg) scale(1.012)',
+    }
+    const keyframes = continuedFrom ? [from, to] : [from, middle, landing, to]
+    const animation = wrapper.animate(keyframes, {
+      duration: speed === 'fast' ? 250 : 510,
+      easing: 'cubic-bezier(0.16, 0.76, 0.22, 1)',
       fill: 'both',
     })
 
     dealAnimationRef.current = animation
     finishAnimation(animation, dealAnimationRef)
-  }, [identity, speed, prefersReducedMotion])
+  }, [identity, speed, prefersReducedMotion, animateOnMount, entranceKey])
 
   useSafeLayoutEffect(() => {
     const flip = flipRef.current
@@ -199,7 +217,7 @@ export function AnimatedCard({
     const from = currentTransform ?? (previousHidden ? 'rotateY(180deg)' : 'rotateY(0deg)')
     const to = hidden ? 'rotateY(180deg)' : 'rotateY(0deg)'
     const animation = flip.animate([{ transform: from }, { transform: to }], {
-      duration: speed === 'fast' ? 150 : 300,
+      duration: speed === 'fast' ? 180 : 390,
       easing: 'cubic-bezier(0.2, 0.72, 0.25, 1)',
       fill: 'both',
     })

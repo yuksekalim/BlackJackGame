@@ -2,7 +2,7 @@
 
 A single-player browser blackjack game built around a distinctive Japanese-inspired card deck and polished, responsive card handling. The game uses virtual chips only.
 
-**Status:** playable MVP on `codex/blackjack-mvp`. The original scalable deck is accepted for the first release.
+**Status:** playable MVP on `codex/blackjack-mvp`. The original scalable deck has received a detail and readability pass.
 
 ## Agreed Baseline
 
@@ -12,7 +12,7 @@ A single-player browser blackjack game built around a distinctive Japanese-inspi
 - Insurance and surrender are outside the first release.
 - Desktop and mobile layouts, readable cards, quick controls, animation speed control, and reduced-motion support are product goals.
 
-The detailed edge rules for splitting and doubling are tracked in [Rules](docs/RULES.md). The browser game uses TypeScript, React, and Vite. It includes virtual-chip betting, full rounds, keyboard controls, speed settings, and reduced-motion support. Dealing, dealer-card reveals, chip counts, and results have a first pass of motion; richer chip travel and timing polish remain in the backlog.
+The detailed edge rules for splitting and doubling are tracked in [Rules](docs/RULES.md). The browser game uses TypeScript, React, and Vite. It includes virtual-chip betting, full rounds, keyboard controls, speed settings, and reduced-motion support. Cards fly from the table shoe in engine event order; the dealer reveals the hidden card before drawing, and outcomes appear after the sequence. Chip counts and results also animate. Richer chip travel remains in the backlog.
 
 ## Deck Direction
 
@@ -40,4 +40,4 @@ npm test
 npm run lint
 ```
 
-The local preview runs at `http://localhost:5173/` by default. The app is playable on the `codex/blackjack-mvp` branch. The 22 deterministic rule tests, production build, and lint check pass. Browser checks covered desktop and narrow mobile layouts, deal, stand, double, replay, speed selection, keyboard input, and card loading. Further animation polish and full end-to-end outcome coverage are tracked in [Tasks](TASKS.md).
+The local preview runs at `http://localhost:5173/` by default. The app is playable on the `codex/blackjack-mvp` branch. The 22 deterministic rule tests and 4 presentation tests, production build, and lint check pass. Browser checks covered desktop and 320px mobile layouts, ordered deal and Stand sequences, enlarged card and score sizes, instant speed, interruption by New game, and card loading. Full end-to-end outcome coverage is tracked in [Tasks](TASKS.md).

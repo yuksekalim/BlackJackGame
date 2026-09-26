@@ -77,10 +77,15 @@ def pip_face(suit: str, rank: str, color: str) -> str:
 def court_art(rank: str, suit: str, color: str, accent: str, light: str) -> str:
     """Original mirrored vector portraits: kabuto samurai, court lady, and shogun."""
     # Fine ornament behind the people makes every court card feel like one family.
+    corner_marks = ''.join(
+        suit_shape(suit, x, y, 12, 12, accent)
+        for x, y in ((61, 74), (177, 74), (61, 263), (177, 263))
+    )
     frame = f'''<rect x="46" y="51" width="158" height="248" rx="11" fill="#F0E7D3" stroke="#C9B98F" stroke-width="1.4"/>
-<path d="M57 64 V285 M193 64 V285" stroke="#D9CBA9" stroke-width="1"/>
-<path d="M65 75 l7 7 -7 7 -7 -7z M185 75 l7 7 -7 7 -7 -7z M65 270 l7 7 -7 7 -7 -7z M185 270 l7 7 -7 7 -7 -7z" fill="{accent}" opacity=".75"/>'''
+<path d="M57 64 V285 M193 64 V285" stroke="#D9CBA9" stroke-width="1.2"/>
+{corner_marks}'''
     blade = ''
+    costume_detail = ''
     if rank == "J":
         blade = f'''<path d="M174 74 Q183 66 191 72 L188 147 L180 165 L173 148 Z" fill="#DCE3E1" stroke="{INK}" stroke-width="2"/>
 <path d="M171 125 L192 130 M177 151 L187 151" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>'''
@@ -92,6 +97,9 @@ def court_art(rank: str, suit: str, color: str, accent: str, light: str) -> str:
 <path d="M94 136 L125 165 L156 136 L151 174 L99 174 Z" fill="{light}" stroke="{INK}" stroke-width="2"/>
 <path d="M103 143 L146 143 M99 153 L151 153 M101 163 L149 163" stroke="{accent}" stroke-width="3"/>
 <circle cx="110" cy="151" r="5" fill="{accent}"/><circle cx="139" cy="151" r="5" fill="{accent}"/>'''
+        costume_detail = f'''<path d="M84 139 Q85 128 98 126 L108 134 L102 148 L88 149 Z M144 134 L154 126 Q168 129 169 140 L165 149 L151 148 Z" fill="{accent}" stroke="{INK}" stroke-width="2"/>
+<path d="M87 139 H101 M153 139 H166 M106 145 L125 157 L145 145" fill="none" stroke="#F0D795" stroke-width="2.2" stroke-linecap="round"/>
+{suit_shape(suit, 103, 151, 12, 12, "#F6E8C9")}{suit_shape(suit, 137, 151, 12, 12, "#F6E8C9")}'''
         face_hair = '<path d="M101 92 Q104 79 126 79 Q148 80 151 94 L146 108 L104 108 Z" fill="#202C38"/>'
         head_top = headgear
         neck = f'<path d="M113 126 L113 138 L126 148 L139 138 L139 126" fill="#E4B894" stroke="{INK}" stroke-width="2"/>'
@@ -107,6 +115,10 @@ def court_art(rank: str, suit: str, color: str, accent: str, light: str) -> str:
 <path d="M99 132 L125 166 L151 132 L143 174 L106 174 Z" fill="#F4E8CE" stroke="{INK}" stroke-width="2"/>
 <path d="M84 158 Q126 145 169 158 L174 169 L79 169 Z" fill="{light}" stroke="{INK}" stroke-width="2"/>
 <path d="M99 158 H152" stroke="{accent}" stroke-width="5"/>'''
+        costume_detail = f'''<path d="M82 147 Q91 153 103 154 M168 147 Q159 153 147 154" fill="none" stroke="{accent}" stroke-width="3"/>
+<path d="M106 158 Q126 166 146 158" fill="none" stroke="#F6E8C9" stroke-width="2.5"/>
+{suit_shape(suit, 108, 161, 10, 10, "#F6E8C9")}{suit_shape(suit, 138, 161, 10, 10, "#F6E8C9")}
+<path d="M148 67 L177 59" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round"/><circle cx="179" cy="58" r="4.5" fill="{light}" stroke="{INK}" stroke-width="1.5"/>'''
         face_hair = '<path d="M101 91 Q108 78 127 79 Q147 79 151 95 L147 106 L103 106 Z" fill="#202C38"/>'
         head_top = headgear
         neck = f'<path d="M113 125 L113 138 L126 147 L139 138 L139 125" fill="#E8C3A5" stroke="{INK}" stroke-width="2"/>'
@@ -122,6 +134,9 @@ def court_art(rank: str, suit: str, color: str, accent: str, light: str) -> str:
 <path d="M101 132 L126 165 L151 132 L145 174 L107 174 Z" fill="{light}" stroke="{INK}" stroke-width="2"/>
 <path d="M84 155 H168 M92 164 H161" stroke="{accent}" stroke-width="3"/>
 <path d="M126 148 l8 8 -8 8 -8 -8z" fill="#F2E8D5" stroke="{accent}" stroke-width="2"/>'''
+        costume_detail = f'''<path d="M88 144 L101 148 M164 144 L151 148 M98 166 H111 M141 166 H154" stroke="#F0D795" stroke-width="2.5" stroke-linecap="round"/>
+{suit_shape(suit, 105, 148, 12, 12, "#F6E8C9")}{suit_shape(suit, 138, 148, 12, 12, "#F6E8C9")}
+<path d="M116 141 L126 151 L136 141" fill="none" stroke="{accent}" stroke-width="2.5" stroke-linejoin="round"/>'''
         face_hair = '<path d="M101 92 Q105 80 126 80 Q147 80 151 92 L148 104 L104 104 Z" fill="#30343B"/>'
         head_top = headgear
         neck = f'<path d="M113 124 L113 137 L126 147 L139 137 L139 124" fill="#E6BD9D" stroke="{INK}" stroke-width="2"/>'
@@ -130,10 +145,13 @@ def court_art(rank: str, suit: str, color: str, accent: str, light: str) -> str:
 {blade}
 {hair}
 {robe}
+{costume_detail}
 {neck}
 <ellipse cx="126" cy="105" rx="25" ry="31" fill="#EBC6A5" stroke="{INK}" stroke-width="2.2"/>
 {face_hair}
+<path d="M110 101 q5 -3 10 -1 M132 100 q5 -2 10 1" fill="none" stroke="#493932" stroke-width="1.5"/>
 <path d="M112 108 q4 -3 8 0 M133 108 q4 -3 8 0" fill="none" stroke="#312C2B" stroke-width="2"/>
+<circle cx="116" cy="108" r="1.25" fill="#242B30"/><circle cx="137" cy="108" r="1.25" fill="#242B30"/>
 <path d="M125 111 l-2 8 5 1 M119 125 Q126 129 134 124" fill="none" stroke="#9D5D52" stroke-width="1.8"/>
 {beard}
 {head_top}
@@ -164,8 +182,8 @@ def card_back() -> str:
 <title>Japanese-inspired card back</title><desc>Uniform navy card back with a fine geometric lattice and a rotationally balanced eight-petal crest.</desc>
 <rect x="5.5" y="5.5" width="239" height="339" rx="17" fill="#173553" stroke="#10273F" stroke-width="3"/>
 <rect x="13" y="13" width="224" height="324" rx="12" fill="#1D4165" stroke="#E0CD98" stroke-width="2"/>
-<defs><pattern id="asanoha" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 0 L30 15 L15 30 L0 15 Z M0 0 L30 30 M30 0 L0 30" fill="none" stroke="#7590A3" stroke-width="1" opacity=".55"/></pattern></defs>
-<rect x="19" y="19" width="212" height="312" rx="9" fill="url(#asanoha)" stroke="#93A5A4" stroke-width="1"/>
+<defs><pattern id="asanoha" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M13 0 L26 13 L13 26 L0 13 Z M0 0 L26 26 M26 0 L0 26" fill="none" stroke="#A8BDB9" stroke-width="1.25" opacity=".72"/></pattern></defs>
+<rect x="19" y="19" width="212" height="312" rx="9" fill="url(#asanoha)" stroke="#B3C2B6" stroke-width="1.35"/>
 <rect x="31" y="31" width="188" height="288" rx="7" fill="none" stroke="#E0CD98" stroke-width="1.4"/>
 <path d="M125 43 V307 M42 175 H208" stroke="#E0CD98" stroke-width="1" opacity=".45"/>
 <g>{''.join(rays)}</g>

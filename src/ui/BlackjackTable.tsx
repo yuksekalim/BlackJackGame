@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { scoreHand } from '../game'
-import type { GameAction, GameState, PlayerHand } from '../game/types'
+import type { Card, GameAction, GameState, PlayerHand } from '../game/types'
 import { AnimatedCard } from '../motion/AnimatedCard'
+import type { CardPresentation } from '../motion/card-presentation'
 import './table.css'
 
 export interface BlackjackTableProps {
@@ -10,6 +11,7 @@ export interface BlackjackTableProps {
   onAction: (action: GameAction) => void
   speed: 'normal' | 'fast' | 'instant'
   onSpeedChange: (speed: 'normal' | 'fast' | 'instant') => void
+  presentation?: CardPresentation | null
 }
 
 const MIN_BET = 10
@@ -20,17 +22,19 @@ const numberFormat = new Intl.NumberFormat('en-US')
 
 const formatChips = (amount: number) => `${numberFormat.format(amount)} chips`
 
-function HandScore({ hand }: { hand: PlayerHand }) {
-  const score = scoreHand(hand.cards)
-  if (score.busted) return <span className="bj-score bj-score--bust">Bust · {score.total}</span>
+function HandScore({ cards }: { cards: Card[] }) {
+  if (cards.length === 0) return <span className="bj-score bj-score--pending">—</span>
+  const score = scoreHand(cards)
+  if (score.busted) return <span className="bj-score bj-score--bust">Bust · <span className="bj-score-value">{score.total}</span></span>
   return (
     <span className="bj-score">
-      {score.total}{score.soft ? <span className="bj-score-note"> soft</span> : null}
+      <span className="bj-score-value">{score.total}</span>{score.soft ? <span className="bj-score-note"> soft</span> : null}
     </span>
   )
 }
 
-function HandStatus({ hand, active }: { hand: PlayerHand; active: boolean }) {
+function HandStatus({ hand, active, resultsVisible }: { hand: PlayerHand; active: boolean; resultsVisible: boolean }) {
+  if (!resultsVisible && hand.outcome) return <span className="bj-hand-result">Resolving</span>
   if (hand.outcome) {
     const label = hand.outcome === 'blackjack' ? 'Blackjack' : hand.outcome[0].toUpperCase() + hand.outcome.slice(1)
     return <span className={`bj-hand-result bj-hand-result--${hand.outcome} motion-result-entry`} data-motion-pulse="a">{label}</span>
@@ -48,13 +52,17 @@ function PlayerHandView({
   roundNumber,
   active,
   speed,
+  presentation,
 }: {
   hand: PlayerHand
   handIndex: number
   roundNumber: number
   active: boolean
   speed: BlackjackTableProps['speed']
+  presentation?: CardPresentation | null
 }) {
+  const visibleCards = hand.cards.slice(0, presentation?.playerVisibleCardCounts[hand.id] ?? hand.cards.length)
+  const resultsVisible = !presentation?.busy || presentation.resultsVisible
   return (
     <section
       className={`bj-hand${active ? ' bj-hand--active' : ''}`}
@@ -66,26 +74,37 @@ function PlayerHandView({
           <span className="bj-hand-title">Hand {handIndex + 1}</span>
           {hand.fromSplit ? <span className="bj-split-tag">Split</span> : null}
         </div>
-        <HandStatus hand={hand} active={active} />
+        <HandStatus hand={hand} active={active && !presentation?.busy} resultsVisible={resultsVisible} />
       </header>
       <div className="bj-hand-detail">
-        <HandScore hand={hand} />
+        <HandScore cards={visibleCards} />
         <span className="bj-hand-bet">Bet {formatChips(hand.bet)}</span>
       </div>
-      <div className="bj-cards-lane" aria-label={`${hand.cards.length} cards`}>
-        {hand.cards.map((card, cardIndex) => (
+      <div className="bj-cards-lane" aria-label={`${visibleCards.length} cards`}>
+        {visibleCards.map((card, cardIndex) => (
           <div className="bj-card-slot" key={`${roundNumber}-${hand.id}-${cardIndex}`}>
             <AnimatedCard
               card={card}
               cardId={`round-${roundNumber}-${hand.id}-${cardIndex}`}
               speed={speed}
               className="bj-card"
+              animateOnMount={presentation?.busy
+                ? presentation.activeCard?.recipient === 'player'
+                  && presentation.activeCard.handId === hand.id
+                  && presentation.activeCard.cardIndex === cardIndex
+                : undefined}
+              entranceKey={presentation?.busy
+                && presentation.activeCard?.recipient === 'player'
+                && presentation.activeCard.handId === hand.id
+                && presentation.activeCard.cardIndex === cardIndex
+                ? `${presentation.sequenceId}-${presentation.step}`
+                : undefined}
             />
           </div>
         ))}
-        {hand.cards.length === 0 ? <span className="bj-empty-hand">Cards will appear here.</span> : null}
+        {visibleCards.length === 0 ? <span className="bj-empty-hand">Cards will appear here.</span> : null}
       </div>
-      {hand.payout !== undefined ? (
+      {resultsVisible && hand.payout !== undefined ? (
         <p className="bj-hand-payout motion-result-entry" data-motion-pulse="a">Return: <strong>{formatChips(hand.payout)}</strong></p>
       ) : null}
     </section>
@@ -98,8 +117,10 @@ export function BlackjackTable({
   onAction,
   speed,
   onSpeedChange,
+  presentation,
 }: BlackjackTableProps) {
   const can = (type: GameAction['type']) => legalActions.includes(type)
+    && (type === 'NEW_GAME' || !presentation?.busy)
   const send = (action: GameAction) => {
     if (can(action.type)) onAction(action)
   }
@@ -134,16 +155,21 @@ export function BlackjackTable({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [legalActions, onAction])
 
-  const dealerVisibleCards = state.dealerHoleHidden ? state.dealerCards.slice(0, 1) : state.dealerCards
+  const dealerCards = state.dealerCards.slice(0, presentation?.dealerVisibleCardCount ?? state.dealerCards.length)
+  const dealerHoleHidden = state.dealerHoleHidden || Boolean(presentation?.busy && !presentation.dealerHoleRevealed)
+  const dealerVisibleCards = dealerHoleHidden ? dealerCards.slice(0, 1) : dealerCards
   const dealerScore = dealerVisibleCards.length > 0 ? scoreHand(dealerVisibleCards) : null
   const activeIndex = state.activeHandIndex
-  const phaseLabel = state.phase === 'betting'
+  const statePhaseLabel = state.phase === 'betting'
     ? 'Place your bet'
     : state.phase === 'player'
       ? 'Player turn'
       : state.phase === 'dealer'
         ? 'Dealer turn'
         : 'Round complete'
+  const phaseLabel = presentation?.busy ? presentation.displayPhaseLabel : statePhaseLabel
+  const displayMessage = presentation?.busy ? presentation.displayMessage : state.message
+  const displayedBankroll = presentation?.busy ? presentation.displayedBankroll : state.bankroll
   const roundAction = can('DEAL')
     ? { label: 'Deal cards', type: 'DEAL' as const }
     : can('NEXT_ROUND')
@@ -173,7 +199,7 @@ export function BlackjackTable({
         <section className="bj-status-row" aria-label="Game status and settings">
           <div className="bj-bankroll">
             <span className="bj-status-label">Bankroll</span>
-            <strong key={state.bankroll} className="motion-chip-count" data-motion-pulse="a">{formatChips(state.bankroll)}</strong>
+            <strong key={displayedBankroll} className="motion-chip-count" data-motion-pulse="a">{formatChips(displayedBankroll)}</strong>
           </div>
           <div className="bj-speed-control">
             <label htmlFor="bj-speed">Card speed</label>
@@ -190,6 +216,7 @@ export function BlackjackTable({
         </section>
 
         <section className="bj-table" aria-label="Blackjack table">
+          <span className="bj-motion-shoe" data-motion-shoe aria-hidden="true" />
           <div className="bj-table-content">
             <section className="bj-dealer-area" aria-label="Dealer hand">
               <div className="bj-zone-heading">
@@ -198,16 +225,17 @@ export function BlackjackTable({
                   <h2>Dealer</h2>
                 </div>
                 {dealerScore ? (
-                  <span className="bj-total-badge">
-                    {state.dealerHoleHidden
-                      ? `Showing ${dealerVisibleCards[0]?.rank ?? '—'}`
-                      : `Total ${dealerScore.total}${dealerScore.soft ? ' · soft' : ''}`}
+                  <span className="bj-total-badge bj-total-badge--score">
+                    <span>{dealerHoleHidden ? 'Showing' : 'Total'}</span>
+                    {' '}
+                    <strong>{dealerHoleHidden ? dealerVisibleCards[0]?.rank ?? '—' : dealerScore.total}</strong>
+                    {!dealerHoleHidden && dealerScore.soft ? <small>soft</small> : null}
                   </span>
                 ) : <span className="bj-total-badge">Waiting for deal</span>}
               </div>
               <div className="bj-table-cards bj-table-cards--dealer">
-                {state.dealerCards.length > 0 ? state.dealerCards.map((card, index) => {
-                  const hidden = state.dealerHoleHidden && index === 1
+                {dealerCards.length > 0 ? dealerCards.map((card, index) => {
+                  const hidden = dealerHoleHidden && index === 1
                   return (
                     <div className="bj-card-slot" key={`dealer-${state.roundNumber}-${index}`}>
                       <AnimatedCard
@@ -216,6 +244,15 @@ export function BlackjackTable({
                         hidden={hidden || undefined}
                         speed={speed}
                         className={`bj-card${hidden ? ' bj-card--hidden' : ''}`}
+                        animateOnMount={presentation?.busy
+                          ? presentation.activeCard?.recipient === 'dealer'
+                            && presentation.activeCard.cardIndex === index
+                          : undefined}
+                        entranceKey={presentation?.busy
+                          && presentation.activeCard?.recipient === 'dealer'
+                          && presentation.activeCard.cardIndex === index
+                          ? `${presentation.sequenceId}-${presentation.step}`
+                          : undefined}
                       />
                     </div>
                   )
@@ -241,8 +278,9 @@ export function BlackjackTable({
                       hand={hand}
                       handIndex={index}
                       roundNumber={state.roundNumber}
-                      active={activeIndex === index && state.phase === 'player'}
+                      active={activeIndex === index && state.phase === 'player' && !presentation?.busy}
                       speed={speed}
+                      presentation={presentation}
                     />
                   ))}
                 </div>
@@ -255,7 +293,7 @@ export function BlackjackTable({
           <span className="bj-message-dot" aria-hidden="true" />
           <div>
             <strong>{phaseLabel}</strong>
-            <p>{state.message}</p>
+            <p>{displayMessage}</p>
           </div>
         </section>
 
