@@ -3,6 +3,9 @@ import { scoreHand } from '../game'
 import type { Card, GameAction, GameState, PlayerHand } from '../game/types'
 import { AnimatedCard } from '../motion/AnimatedCard'
 import type { CardPresentation } from '../motion/card-presentation'
+import { DealerFigure } from './DealerFigure'
+import type { DealerGesture } from './DealerFigure'
+import { summarizeRound } from './round-result'
 import './table.css'
 
 export interface BlackjackTableProps {
@@ -22,9 +25,10 @@ const numberFormat = new Intl.NumberFormat('en-US')
 
 const formatChips = (amount: number) => `${numberFormat.format(amount)} chips`
 
-function HandScore({ cards }: { cards: Card[] }) {
+function HandScore({ cards, houseRuleWin = false }: { cards: Card[]; houseRuleWin?: boolean }) {
   if (cards.length === 0) return <span className="bj-score bj-score--pending">—</span>
   const score = scoreHand(cards)
+  if (score.busted && houseRuleWin) return <span className="bj-score">House-rule win · <span className="bj-score-value">{score.total}</span></span>
   if (score.busted) return <span className="bj-score bj-score--bust">Bust · <span className="bj-score-value">{score.total}</span></span>
   return (
     <span className="bj-score">
@@ -53,6 +57,7 @@ function PlayerHandView({
   active,
   speed,
   presentation,
+  playerFiveCardSideWin,
 }: {
   hand: PlayerHand
   handIndex: number
@@ -60,6 +65,7 @@ function PlayerHandView({
   active: boolean
   speed: BlackjackTableProps['speed']
   presentation?: CardPresentation | null
+  playerFiveCardSideWin: boolean
 }) {
   const visibleCards = hand.cards.slice(0, presentation?.playerVisibleCardCounts[hand.id] ?? hand.cards.length)
   const resultsVisible = !presentation?.busy || presentation.resultsVisible
@@ -77,7 +83,7 @@ function PlayerHandView({
         <HandStatus hand={hand} active={active && !presentation?.busy} resultsVisible={resultsVisible} />
       </header>
       <div className="bj-hand-detail">
-        <HandScore cards={visibleCards} />
+        <HandScore cards={visibleCards} houseRuleWin={resultsVisible && playerFiveCardSideWin && hand.outcome === 'win'} />
         <span className="bj-hand-bet">Bet {formatChips(hand.bet)}</span>
       </div>
       <div className="bj-cards-lane" aria-label={`${visibleCards.length} cards`}>
@@ -159,6 +165,10 @@ export function BlackjackTable({
   const dealerHoleHidden = state.dealerHoleHidden || Boolean(presentation?.busy && !presentation.dealerHoleRevealed)
   const dealerVisibleCards = dealerHoleHidden ? dealerCards.slice(0, 1) : dealerCards
   const dealerScore = dealerVisibleCards.length > 0 ? scoreHand(dealerVisibleCards) : null
+  const dealerFiveCardWin = state.phase === 'settled' && !presentation?.busy
+    && dealerVisibleCards.length >= 5 && state.hands.every((hand) => hand.outcome === 'loss')
+  const playerFiveCardSideWin = state.phase === 'settled'
+    && state.hands.some((hand) => hand.cards.length >= 5 && hand.outcome === 'win')
   const activeIndex = state.activeHandIndex
   const statePhaseLabel = state.phase === 'betting'
     ? 'Place your bet'
@@ -170,6 +180,25 @@ export function BlackjackTable({
   const phaseLabel = presentation?.busy ? presentation.displayPhaseLabel : statePhaseLabel
   const displayMessage = presentation?.busy ? presentation.displayMessage : state.message
   const displayedBankroll = presentation?.busy ? presentation.displayedBankroll : state.bankroll
+  const roundResult = state.phase === 'settled' && !presentation?.busy
+    ? summarizeRound(state.hands)
+    : null
+  const dealerGesture: DealerGesture = presentation?.busy
+    ? presentation.activeCard?.recipient === 'player'
+      ? 'deal-player'
+      : presentation.activeCard?.recipient === 'dealer'
+        ? 'deal-dealer'
+        : presentation.dealerHoleRevealed
+          ? 'reveal'
+          : 'idle'
+    : roundResult?.tone === 'win'
+      ? 'win'
+      : roundResult?.tone === 'loss'
+        ? 'loss'
+        : 'idle'
+  const dealerMotionKey = presentation?.busy
+    ? `${presentation.sequenceId}-${presentation.step}`
+    : `${state.roundNumber}-${dealerGesture}`
   const roundAction = can('DEAL')
     ? { label: 'Deal cards', type: 'DEAL' as const }
     : can('NEXT_ROUND')
@@ -216,9 +245,9 @@ export function BlackjackTable({
         </section>
 
         <section className="bj-table" aria-label="Blackjack table">
-          <span className="bj-motion-shoe" data-motion-shoe aria-hidden="true" />
           <div className="bj-table-content">
             <section className="bj-dealer-area" aria-label="Dealer hand">
+              <DealerFigure gesture={dealerGesture} speed={speed} motionKey={dealerMotionKey} />
               <div className="bj-zone-heading">
                 <div>
                   <span className="bj-zone-kicker">House</span>
@@ -226,7 +255,7 @@ export function BlackjackTable({
                 </div>
                 {dealerScore ? (
                   <span className="bj-total-badge bj-total-badge--score">
-                    <span>{dealerHoleHidden ? 'Showing' : 'Total'}</span>
+                    <span>{dealerFiveCardWin ? 'Five-card win' : dealerHoleHidden ? 'Showing' : 'Total'}</span>
                     {' '}
                     <strong>{dealerHoleHidden ? dealerVisibleCards[0]?.rank ?? '—' : dealerScore.total}</strong>
                     {!dealerHoleHidden && dealerScore.soft ? <small>soft</small> : null}
@@ -281,6 +310,7 @@ export function BlackjackTable({
                       active={activeIndex === index && state.phase === 'player' && !presentation?.busy}
                       speed={speed}
                       presentation={presentation}
+                      playerFiveCardSideWin={playerFiveCardSideWin}
                     />
                   ))}
                 </div>
@@ -289,10 +319,10 @@ export function BlackjackTable({
           </div>
         </section>
 
-        <section className="bj-round-message" aria-live="polite" aria-atomic="true">
+        <section className={`bj-round-message${roundResult ? ` bj-round-message--${roundResult.tone}` : ''}`} aria-live="polite" aria-atomic="true">
           <span className="bj-message-dot" aria-hidden="true" />
           <div>
-            <strong>{phaseLabel}</strong>
+            <strong>{roundResult?.label ?? phaseLabel}</strong>
             <p>{displayMessage}</p>
           </div>
         </section>
@@ -399,6 +429,7 @@ export function BlackjackTable({
             <ul>
               <li>Six decks; dealer stands on every 17, including soft 17.</li>
               <li>A natural blackjack pays 3:2; a tie pushes.</li>
+              <li>House rule: the first side to reach five cards wins the round, even if the fifth card busts. A split hand counts for the player side.</li>
               <li>Bet 10–500 virtual chips in increments of 10.</li>
               <li>Double on the first two cards: take one card, then stand.</li>
               <li>Split one matching-rank pair once; split aces receive one card each and stand.</li>

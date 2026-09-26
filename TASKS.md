@@ -16,6 +16,9 @@ States: `ready`, `blocked`, `in progress`, `review`, `done`. Dora updates owners
 | T-09 | B-08 | Motion agent | ready | Optional after first playable release |
 | T-10 | B-09 | Dora + UI agent | ready | Optional after first playable release |
 | T-11 | B-04 / B-05 | Deck and UI agent + Dora | done | 12 court faces and card back refined; 52 face SVGs verified; enlarged card and total sizes checked at desktop and 320px mobile without page overflow |
+| T-12 | B-05 / B-06 | Dealer figure agent + Dora | done | Original animated dealer figure and hand-sourced card flight integrated; desktop and 320px checks, reduced-motion CSS, build, lint, and independent QA passed |
+| T-13 | B-05 | Dora | done | Centered player cards and net chip result banner verified in live win/loss rounds and at 320px; 2 result tests and independent QA passed |
+| T-14 | B-03 | Gameplay agent + Dora | done | Custom first-side-to-five rule, fifth-card bust precedence, split settlement, UI copy, and docs verified by 6 rule tests and independent QA |
 
 ## Handoff Format
 

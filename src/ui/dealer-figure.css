@@ -1,0 +1,207 @@
+.dealer-figure-stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: end center;
+  flex: 0 0 auto;
+  width: 100%;
+  height: clamp(160px, 24vw, 240px);
+  min-height: 160px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.dealer-figure__artboard {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(100%, 30rem);
+  aspect-ratio: 2 / 1;
+  transform: translateX(-50%);
+}
+
+.dealer-figure__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.dealer-figure__arm,
+.dealer-figure__head {
+  transform-box: view-box;
+}
+
+.dealer-figure__arm--left {
+  transform-origin: 38% 51%;
+}
+
+.dealer-figure__arm--right {
+  transform-origin: 62% 51%;
+}
+
+.dealer-figure__head {
+  transform-origin: 50% 55%;
+}
+
+.dealer-figure-stage[data-gesture='idle'] .dealer-figure__arm--right {
+  animation: dealer-idle-ready 420ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='idle'] .dealer-figure__arm--left {
+  animation: dealer-idle-rest 420ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='deal-player'] .dealer-figure__arm--right {
+  transform: translate(2px, 2px) rotate(2deg);
+  animation: dealer-player-deal 510ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='deal-dealer'] .dealer-figure__arm--left {
+  transform: translate(-2px, 2px) rotate(9deg);
+  animation: dealer-house-deal-left 510ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='deal-dealer'] .dealer-figure__arm--right {
+  transform: translate(-3px, 2px) rotate(-5deg);
+  animation: dealer-house-deal-right 510ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='reveal'] .dealer-figure__arm--left {
+  transform: rotate(13deg);
+  animation: dealer-reveal-left 390ms cubic-bezier(.18, .78, .22, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='reveal'] .dealer-figure__arm--right {
+  transform: rotate(-13deg);
+  animation: dealer-reveal-right 390ms cubic-bezier(.18, .78, .22, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='win'] .dealer-figure__arm--right {
+  transform: translate(-25px, -3px) rotate(-19deg);
+  animation: dealer-acknowledge 460ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='win'] .dealer-figure__head {
+  transform: translateY(2px) rotate(5deg);
+  animation: dealer-bow 460ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='loss'] .dealer-figure__arm--left {
+  transform: translate(5px, 8px) rotate(-8deg);
+  animation: dealer-collect-left 440ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='loss'] .dealer-figure__arm--right {
+  transform: translate(-5px, 12px) rotate(17deg);
+  animation: dealer-collect-right 440ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure-stage[data-gesture='loss'] .dealer-figure__head {
+  transform: translateY(3px) rotate(-4deg);
+  animation: dealer-settle-head 440ms cubic-bezier(.2, .72, .25, 1) both;
+}
+
+.dealer-figure__shoe-anchor {
+  position: absolute;
+  top: 79%;
+  left: 75.25%;
+  z-index: 2;
+  display: block;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes dealer-player-deal {
+  0% { transform: none; }
+  36% { transform: translate(10px, 9px) rotate(9deg); }
+  68% { transform: translate(4px, 4px) rotate(4deg); }
+  100% { transform: translate(2px, 2px) rotate(2deg); }
+}
+
+@keyframes dealer-idle-ready {
+  0% { transform: translate(5px, 4px) rotate(4deg); }
+  68% { transform: translate(0, 0) rotate(-1deg); }
+  100% { transform: none; }
+}
+
+@keyframes dealer-idle-rest {
+  0% { transform: translate(-4px, 3px) rotate(-3deg); }
+  72% { transform: translate(1px, 0) rotate(1deg); }
+  100% { transform: none; }
+}
+
+@keyframes dealer-house-deal-left {
+  0% { transform: none; }
+  34% { transform: translate(-10px, 8px) rotate(16deg); }
+  65% { transform: translate(-4px, 4px) rotate(11deg); }
+  100% { transform: translate(-2px, 2px) rotate(9deg); }
+}
+
+@keyframes dealer-house-deal-right {
+  0% { transform: none; }
+  34% { transform: translate(-11px, 8px) rotate(-10deg); }
+  65% { transform: translate(-5px, 4px) rotate(-7deg); }
+  100% { transform: translate(-3px, 2px) rotate(-5deg); }
+}
+
+@keyframes dealer-reveal-left {
+  0% { transform: none; }
+  55% { transform: translate(-4px, -2px) rotate(18deg); }
+  100% { transform: rotate(13deg); }
+}
+
+@keyframes dealer-reveal-right {
+  0% { transform: none; }
+  55% { transform: translate(4px, -2px) rotate(-18deg); }
+  100% { transform: rotate(-13deg); }
+}
+
+@keyframes dealer-acknowledge {
+  0% { transform: none; }
+  55% { transform: translate(-28px, -8px) rotate(-25deg); }
+  100% { transform: translate(-25px, -3px) rotate(-19deg); }
+}
+
+@keyframes dealer-bow {
+  0% { transform: none; }
+  58% { transform: translateY(5px) rotate(8deg); }
+  100% { transform: translateY(2px) rotate(5deg); }
+}
+
+@keyframes dealer-collect-left {
+  0% { transform: none; }
+  48% { transform: translate(9px, 12px) rotate(-13deg); }
+  100% { transform: translate(5px, 8px) rotate(-8deg); }
+}
+
+@keyframes dealer-collect-right {
+  0% { transform: none; }
+  48% { transform: translate(-12px, 17px) rotate(23deg); }
+  100% { transform: translate(-5px, 12px) rotate(17deg); }
+}
+
+@keyframes dealer-settle-head {
+  0% { transform: none; }
+  48% { transform: translateY(5px) rotate(-6deg); }
+  100% { transform: translateY(3px) rotate(-4deg); }
+}
+
+.dealer-figure-stage[data-motion-speed='fast'] .dealer-figure__arm,
+.dealer-figure-stage[data-motion-speed='fast'] .dealer-figure__head {
+  animation-duration: 180ms;
+}
+
+.dealer-figure-stage[data-motion-speed='instant'] .dealer-figure__arm,
+.dealer-figure-stage[data-motion-speed='instant'] .dealer-figure__head {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dealer-figure-stage .dealer-figure__arm,
+  .dealer-figure-stage .dealer-figure__head {
+    animation: none !important;
+  }
+}
