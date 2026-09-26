@@ -2,7 +2,7 @@
 
 A single-player browser blackjack game built around a distinctive Japanese-inspired card deck and polished, responsive card handling. The game uses virtual chips only.
 
-**Status:** implementation starting. The original scalable deck is accepted for the first release.
+**Status:** playable MVP on `codex/blackjack-mvp`. The original scalable deck is accepted for the first release.
 
 ## Agreed Baseline
 
@@ -12,7 +12,7 @@ A single-player browser blackjack game built around a distinctive Japanese-inspi
 - Insurance and surrender are outside the first release.
 - Desktop and mobile layouts, readable cards, quick controls, animation speed control, and reduced-motion support are product goals.
 
-The detailed edge rules for splitting and doubling are tracked in [Rules](docs/RULES.md). The first implementation is a browser game using TypeScript, React, and Vite.
+The detailed edge rules for splitting and doubling are tracked in [Rules](docs/RULES.md). The browser game uses TypeScript, React, and Vite. It includes virtual-chip betting, full rounds, keyboard controls, speed settings, and reduced-motion support. Dealing, dealer-card reveals, chip counts, and results have a first pass of motion; richer chip travel and timing polish remain in the backlog.
 
 ## Deck Direction
 
@@ -37,6 +37,7 @@ npm install
 npm run dev
 npm run build
 npm test
+npm run lint
 ```
 
-The local preview runs at `http://localhost:5173/` by default. Gameplay is being implemented on the `codex/blackjack-mvp` branch; the current screen is a scaffold until the agent work is integrated.
+The local preview runs at `http://localhost:5173/` by default. The app is playable on the `codex/blackjack-mvp` branch. The 22 deterministic rule tests, production build, and lint check pass. Browser checks covered desktop and narrow mobile layouts, deal, stand, double, replay, speed selection, keyboard input, and card loading. Further animation polish and full end-to-end outcome coverage are tracked in [Tasks](TASKS.md).

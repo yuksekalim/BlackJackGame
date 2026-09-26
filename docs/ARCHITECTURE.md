@@ -6,7 +6,7 @@ Build a browser application with TypeScript, Vite, and React. Keep the rules eng
 
 1. **Game engine (`src/game/`):** immutable or clearly controlled state transitions for betting, dealing, player actions, dealer play, and settlement. Inject the random source so tests can control the shoe.
 2. **UI (`src/ui/`):** renders authoritative state, communicates legal actions, and handles mouse, touch, and keyboard input. No duplicated hand-total or payout logic.
-3. **Motion (`src/motion/`):** consumes ordered game events and animates rendered cards/chips. Completion or cancellation returns the UI to the authoritative state. It never chooses outcomes.
+3. **Motion (`src/motion/`):** animates rendered state changes: card entrance and hole-card reveal with Web Animations, plus chip-count and result feedback with CSS. Completion or cancellation returns the UI to the authoritative state. The engine also emits ordered events for future sequences. Motion never chooses outcomes.
 4. **Assets (`assets/cards/`):** original or licensed scalable card faces and one consistent back. A card component maps rank and suit to art.
 
 ## Shared Contract
@@ -22,7 +22,7 @@ The shoe draws from index 0. `applyAction` returns a new authoritative state and
 
 The Deck and UI agent builds `src/ui/BlackjackTable.tsx` with props `{ state, legalActions, onAction, speed, onSpeedChange }`. `onAction` accepts a `GameAction`. The main agent owns the small root `App.tsx` integration.
 
-The Motion agent builds `src/motion/AnimatedCard.tsx` and accompanying CSS. It accepts a `Card`, a stable card ID, a `hidden` flag for the dealer hole card, and a speed value of `normal`, `fast`, or `instant`. It loads the committed SVG assets and renders the same authoritative card immediately when motion is reduced or skipped. The UI agent uses this component for every visible card. Additional chip/result effects may use the ordered events. No motion component changes game state.
+`src/motion/AnimatedCard.tsx` accepts a `Card`, a stable card ID, a `hidden` flag for the dealer hole card, and a speed value of `normal`, `fast`, or `instant`. It loads the committed SVG assets and renders the same authoritative card immediately when motion is reduced or skipped. The UI uses this component for every card. `motion-feedback.css` supplies chip-count and result-entry effects through UI classes and the same speed setting. Future chip travel or event-timed sequences can consume the ordered engine events; no motion component changes game state.
 
 ## Verification
 

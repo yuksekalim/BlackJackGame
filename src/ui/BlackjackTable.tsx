@@ -1,0 +1,375 @@
+import { useEffect } from 'react'
+import { scoreHand } from '../game'
+import type { GameAction, GameState, PlayerHand } from '../game/types'
+import { AnimatedCard } from '../motion/AnimatedCard'
+import './table.css'
+
+export interface BlackjackTableProps {
+  state: GameState
+  legalActions: GameAction['type'][]
+  onAction: (action: GameAction) => void
+  speed: 'normal' | 'fast' | 'instant'
+  onSpeedChange: (speed: 'normal' | 'fast' | 'instant') => void
+}
+
+const MIN_BET = 10
+const MAX_BET = 500
+const BET_STEP = 10
+const CHIP_VALUES = [10, 50, 100]
+const numberFormat = new Intl.NumberFormat('en-US')
+
+const formatChips = (amount: number) => `${numberFormat.format(amount)} chips`
+
+function HandScore({ hand }: { hand: PlayerHand }) {
+  const score = scoreHand(hand.cards)
+  if (score.busted) return <span className="bj-score bj-score--bust">Bust · {score.total}</span>
+  return (
+    <span className="bj-score">
+      {score.total}{score.soft ? <span className="bj-score-note"> soft</span> : null}
+    </span>
+  )
+}
+
+function HandStatus({ hand, active }: { hand: PlayerHand; active: boolean }) {
+  if (hand.outcome) {
+    const label = hand.outcome === 'blackjack' ? 'Blackjack' : hand.outcome[0].toUpperCase() + hand.outcome.slice(1)
+    return <span className={`bj-hand-result bj-hand-result--${hand.outcome} motion-result-entry`} data-motion-pulse="a">{label}</span>
+  }
+  if (active) return <span className="bj-hand-result bj-hand-result--active">Your turn</span>
+  if (hand.status === 'busted') return <span className="bj-hand-result bj-hand-result--loss">Busted</span>
+  if (hand.status === 'stood') return <span className="bj-hand-result">Standing</span>
+  if (hand.status === 'settled') return <span className="bj-hand-result">Complete</span>
+  return <span className="bj-hand-result">Waiting</span>
+}
+
+function PlayerHandView({
+  hand,
+  handIndex,
+  roundNumber,
+  active,
+  speed,
+}: {
+  hand: PlayerHand
+  handIndex: number
+  roundNumber: number
+  active: boolean
+  speed: BlackjackTableProps['speed']
+}) {
+  return (
+    <section
+      className={`bj-hand${active ? ' bj-hand--active' : ''}`}
+      aria-label={`Player hand ${handIndex + 1}${active ? ', active hand' : ''}`}
+      aria-current={active ? 'step' : undefined}
+    >
+      <header className="bj-hand-heading">
+        <div>
+          <span className="bj-hand-title">Hand {handIndex + 1}</span>
+          {hand.fromSplit ? <span className="bj-split-tag">Split</span> : null}
+        </div>
+        <HandStatus hand={hand} active={active} />
+      </header>
+      <div className="bj-hand-detail">
+        <HandScore hand={hand} />
+        <span className="bj-hand-bet">Bet {formatChips(hand.bet)}</span>
+      </div>
+      <div className="bj-cards-lane" aria-label={`${hand.cards.length} cards`}>
+        {hand.cards.map((card, cardIndex) => (
+          <div className="bj-card-slot" key={`${roundNumber}-${hand.id}-${cardIndex}`}>
+            <AnimatedCard
+              card={card}
+              cardId={`round-${roundNumber}-${hand.id}-${cardIndex}`}
+              speed={speed}
+              className="bj-card"
+            />
+          </div>
+        ))}
+        {hand.cards.length === 0 ? <span className="bj-empty-hand">Cards will appear here.</span> : null}
+      </div>
+      {hand.payout !== undefined ? (
+        <p className="bj-hand-payout motion-result-entry" data-motion-pulse="a">Return: <strong>{formatChips(hand.payout)}</strong></p>
+      ) : null}
+    </section>
+  )
+}
+
+export function BlackjackTable({
+  state,
+  legalActions,
+  onAction,
+  speed,
+  onSpeedChange,
+}: BlackjackTableProps) {
+  const can = (type: GameAction['type']) => legalActions.includes(type)
+  const send = (action: GameAction) => {
+    if (can(action.type)) onAction(action)
+  }
+  const setBet = (amount: number) => {
+    // These bounds mirror the visible house rules; the engine remains authoritative.
+    const maximum = Math.min(MAX_BET, Math.floor(state.bankroll / BET_STEP) * BET_STEP)
+    if (!can('SET_BET') || maximum < MIN_BET) return
+    const snapped = Math.round(amount / BET_STEP) * BET_STEP
+    const validAmount = Math.max(MIN_BET, Math.min(maximum, snapped))
+    if (validAmount !== state.selectedBet) send({ type: 'SET_BET', amount: validAmount })
+  }
+
+  useEffect(() => {
+    const shortcuts: Record<string, Exclude<GameAction['type'], 'SET_BET' | 'DEAL' | 'NEXT_ROUND' | 'NEW_GAME'>> = {
+      h: 'HIT',
+      s: 'STAND',
+      d: 'DOUBLE',
+      p: 'SPLIT',
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat || event.altKey || event.ctrlKey || event.metaKey) return
+      const target = event.target
+      if (target instanceof HTMLElement && (
+        target.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].includes(target.tagName)
+      )) return
+      const action = shortcuts[event.key.toLowerCase()]
+      if (!action || !legalActions.includes(action)) return
+      event.preventDefault()
+      onAction({ type: action })
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [legalActions, onAction])
+
+  const dealerVisibleCards = state.dealerHoleHidden ? state.dealerCards.slice(0, 1) : state.dealerCards
+  const dealerScore = dealerVisibleCards.length > 0 ? scoreHand(dealerVisibleCards) : null
+  const activeIndex = state.activeHandIndex
+  const phaseLabel = state.phase === 'betting'
+    ? 'Place your bet'
+    : state.phase === 'player'
+      ? 'Player turn'
+      : state.phase === 'dealer'
+        ? 'Dealer turn'
+        : 'Round complete'
+  const roundAction = can('DEAL')
+    ? { label: 'Deal cards', type: 'DEAL' as const }
+    : can('NEXT_ROUND')
+      ? { label: 'Next hand', type: 'NEXT_ROUND' as const }
+      : null
+  const maxBet = Math.min(MAX_BET, Math.floor(state.bankroll / BET_STEP) * BET_STEP)
+  const canBet = can('SET_BET') && maxBet >= MIN_BET
+  const committedBet = state.hands.reduce((total, hand) => total + hand.bet, 0)
+
+  return (
+    <main className="bj-app" data-motion-speed={speed}>
+      <div className="bj-frame">
+        <header className="bj-header">
+          <div className="bj-brand">
+            <span className="bj-brand-mark" aria-hidden="true">花</span>
+            <div>
+              <p className="bj-eyebrow">Virtual table · illustrated deck</p>
+              <h1>Blackjack</h1>
+            </div>
+          </div>
+          <div className="bj-round-pill" aria-label={`Round ${state.roundNumber}`}>
+            <span className="bj-round-label">Round</span>
+            <strong>{numberFormat.format(state.roundNumber)}</strong>
+          </div>
+        </header>
+
+        <section className="bj-status-row" aria-label="Game status and settings">
+          <div className="bj-bankroll">
+            <span className="bj-status-label">Bankroll</span>
+            <strong key={state.bankroll} className="motion-chip-count" data-motion-pulse="a">{formatChips(state.bankroll)}</strong>
+          </div>
+          <div className="bj-speed-control">
+            <label htmlFor="bj-speed">Card speed</label>
+            <select
+              id="bj-speed"
+              value={speed}
+              onChange={(event) => onSpeedChange(event.target.value as BlackjackTableProps['speed'])}
+            >
+              <option value="normal">Normal</option>
+              <option value="fast">Fast</option>
+              <option value="instant">Instant</option>
+            </select>
+          </div>
+        </section>
+
+        <section className="bj-table" aria-label="Blackjack table">
+          <div className="bj-table-content">
+            <section className="bj-dealer-area" aria-label="Dealer hand">
+              <div className="bj-zone-heading">
+                <div>
+                  <span className="bj-zone-kicker">House</span>
+                  <h2>Dealer</h2>
+                </div>
+                {dealerScore ? (
+                  <span className="bj-total-badge">
+                    {state.dealerHoleHidden
+                      ? `Showing ${dealerVisibleCards[0]?.rank ?? '—'}`
+                      : `Total ${dealerScore.total}${dealerScore.soft ? ' · soft' : ''}`}
+                  </span>
+                ) : <span className="bj-total-badge">Waiting for deal</span>}
+              </div>
+              <div className="bj-table-cards bj-table-cards--dealer">
+                {state.dealerCards.length > 0 ? state.dealerCards.map((card, index) => {
+                  const hidden = state.dealerHoleHidden && index === 1
+                  return (
+                    <div className="bj-card-slot" key={`dealer-${state.roundNumber}-${index}`}>
+                      <AnimatedCard
+                        card={card}
+                        cardId={`round-${state.roundNumber}-dealer-${index}`}
+                        hidden={hidden || undefined}
+                        speed={speed}
+                        className={`bj-card${hidden ? ' bj-card--hidden' : ''}`}
+                      />
+                    </div>
+                  )
+                }) : <p className="bj-table-placeholder">Your next hand is waiting.</p>}
+              </div>
+            </section>
+
+            <div className="bj-felt-divider" aria-hidden="true"><span>♧</span></div>
+
+            <section className="bj-player-area" aria-label="Your hands">
+              <div className="bj-zone-heading bj-zone-heading--player">
+                <div>
+                  <span className="bj-zone-kicker">Player</span>
+                  <h2>Your hand{state.hands.length > 1 ? 's' : ''}</h2>
+                </div>
+                <span className="bj-total-badge bj-total-badge--phase">{phaseLabel}</span>
+              </div>
+              {state.hands.length > 0 ? (
+                <div className="bj-hands-grid">
+                  {state.hands.map((hand, index) => (
+                    <PlayerHandView
+                      key={hand.id}
+                      hand={hand}
+                      handIndex={index}
+                      roundNumber={state.roundNumber}
+                      active={activeIndex === index && state.phase === 'player'}
+                      speed={speed}
+                    />
+                  ))}
+                </div>
+              ) : <p className="bj-table-placeholder">Place a bet to begin.</p>}
+            </section>
+          </div>
+        </section>
+
+        <section className="bj-round-message" aria-live="polite" aria-atomic="true">
+          <span className="bj-message-dot" aria-hidden="true" />
+          <div>
+            <strong>{phaseLabel}</strong>
+            <p>{state.message}</p>
+          </div>
+        </section>
+
+        <section className="bj-controls" aria-label="Game controls">
+          {state.phase === 'betting' ? (
+            <div className="bj-bet-panel">
+              <div className="bj-control-heading">
+                <div>
+                  <span className="bj-zone-kicker">Wager</span>
+                  <h2>Choose your bet</h2>
+                </div>
+                <span className="bj-bet-limit">10–500 chips · steps of 10</span>
+              </div>
+              <div className="bj-bet-selector">
+                <button
+                  type="button"
+                  className="bj-adjust-button"
+                  aria-label="Decrease bet by 10 chips"
+                  onClick={() => setBet(state.selectedBet - BET_STEP)}
+                  disabled={!canBet || state.selectedBet <= MIN_BET}
+                >−</button>
+                <output className="bj-bet-amount" aria-live="polite">
+                  <span key={state.selectedBet} className="motion-chip-count" data-motion-pulse="a">{formatChips(state.selectedBet)}</span>
+                  <small>selected bet</small>
+                </output>
+                <button
+                  type="button"
+                  className="bj-adjust-button"
+                  aria-label="Increase bet by 10 chips"
+                  onClick={() => setBet(state.selectedBet + BET_STEP)}
+                  disabled={!canBet || state.selectedBet >= maxBet}
+                >+</button>
+              </div>
+              <div className="bj-chip-row" aria-label="Add chips to selected bet">
+                {CHIP_VALUES.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={`bj-chip bj-chip--${value}`}
+                    onClick={() => setBet(state.selectedBet + value)}
+                    disabled={!canBet || state.selectedBet >= maxBet}
+                    aria-label={`Add ${value} chips to bet`}
+                  >
+                    <span>{value}</span>
+                    <small>+{value}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bj-locked-bet">
+              <span className="bj-zone-kicker">Current wager</span>
+              <strong key={committedBet} className="motion-chip-count" data-motion-pulse="a">{formatChips(committedBet)}</strong>
+              {state.hands.length > 1 ? <span>across {state.hands.length} hands</span> : <span>committed to this round</span>}
+            </div>
+          )}
+
+          <div className="bj-action-panel">
+            <div className="bj-control-heading bj-control-heading--actions">
+              <div>
+                <span className="bj-zone-kicker">Your move</span>
+                <h2>Actions</h2>
+              </div>
+              <span className="bj-key-hint">Keyboard: H · S · D · P</span>
+            </div>
+            <div className="bj-actions-grid">
+              <button type="button" className="bj-action-button bj-action-button--primary" onClick={() => send({ type: 'HIT' })} disabled={!can('HIT')}>
+                <span>Hit</span><kbd>H</kbd>
+              </button>
+              <button type="button" className="bj-action-button" onClick={() => send({ type: 'STAND' })} disabled={!can('STAND')}>
+                <span>Stand</span><kbd>S</kbd>
+              </button>
+              <button type="button" className="bj-action-button" onClick={() => send({ type: 'DOUBLE' })} disabled={!can('DOUBLE')}>
+                <span>Double</span><kbd>D</kbd>
+              </button>
+              <button type="button" className="bj-action-button" onClick={() => send({ type: 'SPLIT' })} disabled={!can('SPLIT')}>
+                <span>Split</span><kbd>P</kbd>
+              </button>
+            </div>
+            <div className="bj-round-actions">
+              {roundAction ? (
+                <button
+                  type="button"
+                  className="bj-round-button"
+                  onClick={() => send({ type: roundAction.type })}
+                  disabled={roundAction.type === 'DEAL' && (!canBet || state.selectedBet > maxBet)}
+                >
+                  {roundAction.label}<span aria-hidden="true">→</span>
+                </button>
+              ) : null}
+              {can('NEW_GAME') ? (
+                <button type="button" className="bj-reset-button" onClick={() => send({ type: 'NEW_GAME' })}>
+                  New game
+                </button>
+              ) : null}
+            </div>
+          </div>
+        </section>
+
+        <details className="bj-rules">
+          <summary>House rules &amp; shortcuts</summary>
+          <div className="bj-rules-content">
+            <ul>
+              <li>Six decks; dealer stands on every 17, including soft 17.</li>
+              <li>A natural blackjack pays 3:2; a tie pushes.</li>
+              <li>Bet 10–500 virtual chips in increments of 10.</li>
+              <li>Double on the first two cards: take one card, then stand.</li>
+              <li>Split one matching-rank pair once; split aces receive one card each and stand.</li>
+              <li>Insurance and surrender are not available.</li>
+            </ul>
+            <p>Keyboard shortcuts while the table is active: <kbd>H</kbd> hit, <kbd>S</kbd> stand, <kbd>D</kbd> double, <kbd>P</kbd> split. All actions are also available with Tab and Enter.</p>
+          </div>
+        </details>
+      </div>
+    </main>
+  )
+}

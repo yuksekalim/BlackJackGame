@@ -1,0 +1,36 @@
+.animated-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  perspective: 900px;
+  transform-origin: center;
+}
+
+.animated-card__flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.animated-card__face,
+.animated-card__back {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.animated-card__face {
+  transform: rotateY(0deg);
+}
+
+.animated-card__back {
+  transform: rotateY(180deg);
+}
