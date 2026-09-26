@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63.5mm" height="88.9mm" viewBox="0 0 250 350" role="img" aria-label="K of Clubs">
+<title>K of Clubs</title><desc>Original vector playing card with warm ivory face, clubs indices, and shogun artwork where applicable.</desc>
+<rect x="5.5" y="5.5" width="239" height="339" rx="17" fill="#F7F2E2" stroke="#26374A" stroke-width="2.6"/>
+<rect x="11" y="11" width="228" height="328" rx="13" fill="none" stroke="#B8AA89" stroke-width="1.15"/>
+<path d="M22 76 V22 H76 M174 22 H228 V76 M22 274 V328 H76 M174 328 H228 V274" fill="none" stroke="#D8CBAE" stroke-width="1.2"/><rect x="46" y="51" width="158" height="248" rx="11" fill="#F0E7D3" stroke="#C9B98F" stroke-width="1.4"/>
+<path d="M57 64 V285 M193 64 V285" stroke="#D9CBA9" stroke-width="1"/>
+<path d="M65 75 l7 7 -7 7 -7 -7z M185 75 l7 7 -7 7 -7 -7z M65 270 l7 7 -7 7 -7 -7z M185 270 l7 7 -7 7 -7 -7z" fill="#C49A4B" opacity=".75"/><g><g stroke-linejoin="round" stroke-linecap="round">
+<path d="M179 84 L181 151 M171 111 H191 M174 148 H188" fill="none" stroke="#C49A4B" stroke-width="4" stroke-linecap="round"/>
+<circle cx="180" cy="78" r="7" fill="#173F68" stroke="#26374A" stroke-width="2"/>
+
+<path d="M78 170 L87 136 Q99 126 110 129 L126 146 L142 129 Q156 126 167 137 L176 170 Z" fill="#173F68" stroke="#26374A" stroke-width="2.5"/>
+<path d="M101 132 L126 165 L151 132 L145 174 L107 174 Z" fill="#4E7891" stroke="#26374A" stroke-width="2"/>
+<path d="M84 155 H168 M92 164 H161" stroke="#C49A4B" stroke-width="3"/>
+<path d="M126 148 l8 8 -8 8 -8 -8z" fill="#F2E8D5" stroke="#C49A4B" stroke-width="2"/>
+<path d="M113 124 L113 137 L126 147 L139 137 L139 124" fill="#E6BD9D" stroke="#26374A" stroke-width="2"/>
+<ellipse cx="126" cy="105" rx="25" ry="31" fill="#EBC6A5" stroke="#26374A" stroke-width="2.2"/>
+<path d="M101 92 Q105 80 126 80 Q147 80 151 92 L148 104 L104 104 Z" fill="#30343B"/>
+<path d="M112 108 q4 -3 8 0 M133 108 q4 -3 8 0" fill="none" stroke="#312C2B" stroke-width="2"/>
+<path d="M125 111 l-2 8 5 1 M119 125 Q126 129 134 124" fill="none" stroke="#9D5D52" stroke-width="1.8"/>
+<path d="M106 111 Q126 129 146 111 Q146 143 126 150 Q106 143 106 111 Z" fill="#30343B" stroke="#26374A" stroke-width="1.6"/>
+<path d="M98 91 L101 66 L112 71 L126 52 L140 71 L153 65 L156 93 Z" fill="#173F68" stroke="#26374A" stroke-width="2.5"/>
+<path d="M103 78 H151 M108 88 H147" stroke="#C49A4B" stroke-width="3"/>
+<circle cx="126" cy="60" r="5" fill="#C49A4B"/>
+<path d="M77 169 H175" stroke="#C49A4B" stroke-width="3"/>
+</g></g><g transform="rotate(180 125 175)"><g stroke-linejoin="round" stroke-linecap="round">
+<path d="M179 84 L181 151 M171 111 H191 M174 148 H188" fill="none" stroke="#C49A4B" stroke-width="4" stroke-linecap="round"/>
+<circle cx="180" cy="78" r="7" fill="#173F68" stroke="#26374A" stroke-width="2"/>
+
+<path d="M78 170 L87 136 Q99 126 110 129 L126 146 L142 129 Q156 126 167 137 L176 170 Z" fill="#173F68" stroke="#26374A" stroke-width="2.5"/>
+<path d="M101 132 L126 165 L151 132 L145 174 L107 174 Z" fill="#4E7891" stroke="#26374A" stroke-width="2"/>
+<path d="M84 155 H168 M92 164 H161" stroke="#C49A4B" stroke-width="3"/>
+<path d="M126 148 l8 8 -8 8 -8 -8z" fill="#F2E8D5" stroke="#C49A4B" stroke-width="2"/>
+<path d="M113 124 L113 137 L126 147 L139 137 L139 124" fill="#E6BD9D" stroke="#26374A" stroke-width="2"/>
+<ellipse cx="126" cy="105" rx="25" ry="31" fill="#EBC6A5" stroke="#26374A" stroke-width="2.2"/>
+<path d="M101 92 Q105 80 126 80 Q147 80 151 92 L148 104 L104 104 Z" fill="#30343B"/>
+<path d="M112 108 q4 -3 8 0 M133 108 q4 -3 8 0" fill="none" stroke="#312C2B" stroke-width="2"/>
+<path d="M125 111 l-2 8 5 1 M119 125 Q126 129 134 124" fill="none" stroke="#9D5D52" stroke-width="1.8"/>
+<path d="M106 111 Q126 129 146 111 Q146 143 126 150 Q106 143 106 111 Z" fill="#30343B" stroke="#26374A" stroke-width="1.6"/>
+<path d="M98 91 L101 66 L112 71 L126 52 L140 71 L153 65 L156 93 Z" fill="#173F68" stroke="#26374A" stroke-width="2.5"/>
+<path d="M103 78 H151 M108 88 H147" stroke="#C49A4B" stroke-width="3"/>
+<circle cx="126" cy="60" r="5" fill="#C49A4B"/>
+<path d="M77 169 H175" stroke="#C49A4B" stroke-width="3"/>
+</g></g><path d="M61 175 H111 M139 175 H189" stroke="#C49A4B" stroke-width="1.5"/>
+<circle cx="125" cy="175" r="15" fill="#F7F2E2" stroke="#C49A4B" stroke-width="2"/>
+<g transform="translate(118.00 168.00) scale(0.01400 0.01400)" fill="#173F68"><circle cx="500" cy="300" r="260"/><circle cx="275" cy="570" r="250"/><circle cx="725" cy="570" r="250"/><path d="M420 590 Q500 540 580 590 L650 980 Q500 900 350 980 Z"/></g><g fill="#173F68" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">K</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#173F68"><circle cx="500" cy="300" r="260"/><circle cx="275" cy="570" r="250"/><circle cx="725" cy="570" r="250"/><path d="M420 590 Q500 540 580 590 L650 980 Q500 900 350 980 Z"/></g>
+</g><g transform="rotate(180 125 175)"><g fill="#173F68" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">K</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#173F68"><circle cx="500" cy="300" r="260"/><circle cx="275" cy="570" r="250"/><circle cx="725" cy="570" r="250"/><path d="M420 590 Q500 540 580 590 L650 980 Q500 900 350 980 Z"/></g>
+</g></g>
+</svg>

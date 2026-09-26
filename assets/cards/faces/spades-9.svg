@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63.5mm" height="88.9mm" viewBox="0 0 250 350" role="img" aria-label="9 of Spades">
+<title>9 of Spades</title><desc>Original vector playing card with warm ivory face, spades indices, and number card artwork where applicable.</desc>
+<rect x="5.5" y="5.5" width="239" height="339" rx="17" fill="#F7F2E2" stroke="#26374A" stroke-width="2.6"/>
+<rect x="11" y="11" width="228" height="328" rx="13" fill="none" stroke="#B8AA89" stroke-width="1.15"/>
+<path d="M22 76 V22 H76 M174 22 H228 V76 M22 274 V328 H76 M174 328 H228 V274" fill="none" stroke="#D8CBAE" stroke-width="1.2"/><g transform="translate(71.00 66.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+<g transform="translate(149.00 66.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+<g transform="translate(71.00 122.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+<g transform="translate(149.00 122.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+<g transform="translate(110.00 160.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+<g transform="rotate(180 86 213)"><g transform="translate(71.00 198.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g></g>
+<g transform="rotate(180 164 213)"><g transform="translate(149.00 198.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g></g>
+<g transform="rotate(180 86 269)"><g transform="translate(71.00 254.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g></g>
+<g transform="rotate(180 164 269)"><g transform="translate(149.00 254.00) scale(0.03000 0.03000)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g></g><g fill="#173553" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">9</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+</g><g transform="rotate(180 125 175)"><g fill="#173553" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">9</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+</g></g>
+</svg>

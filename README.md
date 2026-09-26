@@ -2,7 +2,7 @@
 
 A single-player browser blackjack game built around a distinctive Japanese-inspired card deck and polished, responsive card handling. The game uses virtual chips only.
 
-**Status:** planning and repository documentation. No application code has been added yet.
+**Status:** planning with an original scalable deck prototype under visual review. No application code has been added yet.
 
 ## Agreed Baseline
 
@@ -16,7 +16,7 @@ The detailed edge rules for splitting and doubling are tracked in [Rules](docs/R
 
 ## Deck Direction
 
-Alim selected a Japanese-inspired card sheet with warm ivory faces, navy and red suits, and illustrated court cards. The supplied sheet is a 735 × 1165 JPEG with individual cards about 87 pixels wide; it cannot provide crisp enlarged cards. See [Art Direction](docs/ART_DIRECTION.md) for the asset plan and rights question.
+Alim selected a Japanese-inspired card sheet with warm ivory faces, navy and red suits, and illustrated court cards. The supplied sheet is a 735 × 1165 JPEG with individual cards about 87 pixels wide; it cannot provide crisp enlarged cards. The Deck and UI agent created an [original SVG deck prototype](assets/cards/README.md) with [52 faces and a matching back](assets/cards/contact-sheet.png). Its court figures are more stylized than the reference and await Alim's visual review. See [Art Direction](docs/ART_DIRECTION.md) for the asset plan.
 
 ## Project Documents
 

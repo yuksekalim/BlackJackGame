@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63.5mm" height="88.9mm" viewBox="0 0 250 350" role="img" aria-label="J of Spades">
+<title>J of Spades</title><desc>Original vector playing card with warm ivory face, spades indices, and samurai page artwork where applicable.</desc>
+<rect x="5.5" y="5.5" width="239" height="339" rx="17" fill="#F7F2E2" stroke="#26374A" stroke-width="2.6"/>
+<rect x="11" y="11" width="228" height="328" rx="13" fill="none" stroke="#B8AA89" stroke-width="1.15"/>
+<path d="M22 76 V22 H76 M174 22 H228 V76 M22 274 V328 H76 M174 328 H228 V274" fill="none" stroke="#D8CBAE" stroke-width="1.2"/><rect x="46" y="51" width="158" height="248" rx="11" fill="#F0E7D3" stroke="#C9B98F" stroke-width="1.4"/>
+<path d="M57 64 V285 M193 64 V285" stroke="#D9CBA9" stroke-width="1"/>
+<path d="M65 75 l7 7 -7 7 -7 -7z M185 75 l7 7 -7 7 -7 -7z M65 270 l7 7 -7 7 -7 -7z M185 270 l7 7 -7 7 -7 -7z" fill="#B99B63" opacity=".75"/><g><g stroke-linejoin="round" stroke-linecap="round">
+<path d="M174 74 Q183 66 191 72 L188 147 L180 165 L173 148 Z" fill="#DCE3E1" stroke="#26374A" stroke-width="2"/>
+<path d="M171 125 L192 130 M177 151 L187 151" stroke="#B99B63" stroke-width="4" stroke-linecap="round"/>
+
+<path d="M82 169 L88 134 Q96 124 109 127 L124 143 L140 127 Q153 124 164 134 L173 169 Z" fill="#173553" stroke="#26374A" stroke-width="2.6"/>
+<path d="M94 136 L125 165 L156 136 L151 174 L99 174 Z" fill="#6F8999" stroke="#26374A" stroke-width="2"/>
+<path d="M103 143 L146 143 M99 153 L151 153 M101 163 L149 163" stroke="#B99B63" stroke-width="3"/>
+<circle cx="110" cy="151" r="5" fill="#B99B63"/><circle cx="139" cy="151" r="5" fill="#B99B63"/>
+<path d="M113 126 L113 138 L126 148 L139 138 L139 126" fill="#E4B894" stroke="#26374A" stroke-width="2"/>
+<ellipse cx="126" cy="105" rx="25" ry="31" fill="#EBC6A5" stroke="#26374A" stroke-width="2.2"/>
+<path d="M101 92 Q104 79 126 79 Q148 80 151 94 L146 108 L104 108 Z" fill="#202C38"/>
+<path d="M112 108 q4 -3 8 0 M133 108 q4 -3 8 0" fill="none" stroke="#312C2B" stroke-width="2"/>
+<path d="M125 111 l-2 8 5 1 M119 125 Q126 129 134 124" fill="none" stroke="#9D5D52" stroke-width="1.8"/>
+
+<path d="M89 98 Q83 75 101 66 Q112 48 126 66 Q146 49 159 68 Q176 79 164 100 L149 91 L126 84 L103 94 Z" fill="#173553" stroke="#26374A" stroke-width="2.5"/>
+<path d="M99 77 Q83 59 71 67 Q82 81 98 88 M151 76 Q167 58 181 67 Q169 84 153 89" fill="#B99B63" stroke="#26374A" stroke-width="2"/>
+<path d="M77 169 H175" stroke="#B99B63" stroke-width="3"/>
+</g></g><g transform="rotate(180 125 175)"><g stroke-linejoin="round" stroke-linecap="round">
+<path d="M174 74 Q183 66 191 72 L188 147 L180 165 L173 148 Z" fill="#DCE3E1" stroke="#26374A" stroke-width="2"/>
+<path d="M171 125 L192 130 M177 151 L187 151" stroke="#B99B63" stroke-width="4" stroke-linecap="round"/>
+
+<path d="M82 169 L88 134 Q96 124 109 127 L124 143 L140 127 Q153 124 164 134 L173 169 Z" fill="#173553" stroke="#26374A" stroke-width="2.6"/>
+<path d="M94 136 L125 165 L156 136 L151 174 L99 174 Z" fill="#6F8999" stroke="#26374A" stroke-width="2"/>
+<path d="M103 143 L146 143 M99 153 L151 153 M101 163 L149 163" stroke="#B99B63" stroke-width="3"/>
+<circle cx="110" cy="151" r="5" fill="#B99B63"/><circle cx="139" cy="151" r="5" fill="#B99B63"/>
+<path d="M113 126 L113 138 L126 148 L139 138 L139 126" fill="#E4B894" stroke="#26374A" stroke-width="2"/>
+<ellipse cx="126" cy="105" rx="25" ry="31" fill="#EBC6A5" stroke="#26374A" stroke-width="2.2"/>
+<path d="M101 92 Q104 79 126 79 Q148 80 151 94 L146 108 L104 108 Z" fill="#202C38"/>
+<path d="M112 108 q4 -3 8 0 M133 108 q4 -3 8 0" fill="none" stroke="#312C2B" stroke-width="2"/>
+<path d="M125 111 l-2 8 5 1 M119 125 Q126 129 134 124" fill="none" stroke="#9D5D52" stroke-width="1.8"/>
+
+<path d="M89 98 Q83 75 101 66 Q112 48 126 66 Q146 49 159 68 Q176 79 164 100 L149 91 L126 84 L103 94 Z" fill="#173553" stroke="#26374A" stroke-width="2.5"/>
+<path d="M99 77 Q83 59 71 67 Q82 81 98 88 M151 76 Q167 58 181 67 Q169 84 153 89" fill="#B99B63" stroke="#26374A" stroke-width="2"/>
+<path d="M77 169 H175" stroke="#B99B63" stroke-width="3"/>
+</g></g><path d="M61 175 H111 M139 175 H189" stroke="#B99B63" stroke-width="1.5"/>
+<circle cx="125" cy="175" r="15" fill="#F7F2E2" stroke="#B99B63" stroke-width="2"/>
+<g transform="translate(118.00 168.00) scale(0.01400 0.01400)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g><g fill="#173553" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">J</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+</g><g transform="rotate(180 125 175)"><g fill="#173553" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">J</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#173553"><path d="M500 35 C390 190 105 350 105 560 C105 745 355 815 478 630 C468 770 420 890 335 960 L665 960 C580 890 532 770 522 630 C645 815 895 745 895 560 C895 350 610 190 500 35 Z"/></g>
+</g></g>
+</svg>

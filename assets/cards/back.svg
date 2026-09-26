@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63.5mm" height="88.9mm" viewBox="0 0 250 350" role="img" aria-label="Japanese-inspired navy card back">
+<title>Japanese-inspired card back</title><desc>Uniform navy card back with a fine geometric lattice and a rotationally balanced eight-petal crest.</desc>
+<rect x="5.5" y="5.5" width="239" height="339" rx="17" fill="#173553" stroke="#10273F" stroke-width="3"/>
+<rect x="13" y="13" width="224" height="324" rx="12" fill="#1D4165" stroke="#E0CD98" stroke-width="2"/>
+<defs><pattern id="asanoha" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 0 L30 15 L15 30 L0 15 Z M0 0 L30 30 M30 0 L0 30" fill="none" stroke="#7590A3" stroke-width="1" opacity=".55"/></pattern></defs>
+<rect x="19" y="19" width="212" height="312" rx="9" fill="url(#asanoha)" stroke="#93A5A4" stroke-width="1"/>
+<rect x="31" y="31" width="188" height="288" rx="7" fill="none" stroke="#E0CD98" stroke-width="1.4"/>
+<path d="M125 43 V307 M42 175 H208" stroke="#E0CD98" stroke-width="1" opacity=".45"/>
+<g><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(0 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(45 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(90 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(135 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(180 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(225 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(270 125 175)" fill="#D9C58F"/><ellipse cx="125" cy="175" rx="9" ry="31" transform="rotate(315 125 175)" fill="#D9C58F"/></g>
+<circle cx="125" cy="175" r="44" fill="#1D4165" stroke="#E0CD98" stroke-width="2.5"/>
+<circle cx="125" cy="175" r="32" fill="none" stroke="#B94142" stroke-width="3"/>
+<circle cx="125" cy="175" r="21" fill="#B94142" stroke="#F0DCA9" stroke-width="2"/>
+<path d="M125 157 L130 170 L143 175 L130 180 L125 193 L120 180 L107 175 L120 170 Z" fill="#F5E8C6"/>
+<circle cx="125" cy="175" r="5" fill="#173553"/>
+<path d="M125 57 l10 10 -10 10 -10 -10z M125 273 l10 10 -10 10 -10 -10z M48 175 l10 10 -10 10 -10 -10z M202 175 l10 10 -10 10 -10 -10z" fill="#E0CD98"/>
+</svg>

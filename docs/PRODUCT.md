@@ -23,7 +23,7 @@ Create a blackjack table that is satisfying to play repeatedly. The visual ident
 ## Open Product Decisions
 
 - Browser is the proposed first platform; Alim has not explicitly confirmed it.
-- Exact asset path: a usable high-resolution/vector source with reuse rights, or original scalable art inspired by the reference.
+- The Deck and UI agent is producing original scalable art inspired by the selected reference; final court-card art still needs Alim's visual review.
 - Detailed split, split-aces, doubling, and shoe reset behavior in `RULES.md`.
 
 Accounts, multiplayer, and real-money play are outside this release. Publishing follows a separate decision.

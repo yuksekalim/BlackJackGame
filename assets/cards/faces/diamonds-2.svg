@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63.5mm" height="88.9mm" viewBox="0 0 250 350" role="img" aria-label="2 of Diamonds">
+<title>2 of Diamonds</title><desc>Original vector playing card with warm ivory face, diamonds indices, and number card artwork where applicable.</desc>
+<rect x="5.5" y="5.5" width="239" height="339" rx="17" fill="#F7F2E2" stroke="#26374A" stroke-width="2.6"/>
+<rect x="11" y="11" width="228" height="328" rx="13" fill="none" stroke="#B8AA89" stroke-width="1.15"/>
+<path d="M22 76 V22 H76 M174 22 H228 V76 M22 274 V328 H76 M174 328 H228 V274" fill="none" stroke="#D8CBAE" stroke-width="1.2"/><g transform="translate(110.00 97.00) scale(0.03000 0.03000)" fill="#C33C36"><path d="M500 0 L1000 500 500 1000 0 500 Z"/></g>
+<g transform="rotate(180 125 238)"><g transform="translate(110.00 223.00) scale(0.03000 0.03000)" fill="#C33C36"><path d="M500 0 L1000 500 500 1000 0 500 Z"/></g></g><g fill="#C33C36" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">2</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#C33C36"><path d="M500 0 L1000 500 500 1000 0 500 Z"/></g>
+</g><g transform="rotate(180 125 175)"><g fill="#C33C36" text-anchor="middle">
+<text x="34" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700">2</text>
+<g transform="translate(25.00 47.00) scale(0.01800 0.01800)" fill="#C33C36"><path d="M500 0 L1000 500 500 1000 0 500 Z"/></g>
+</g></g>
+</svg>
