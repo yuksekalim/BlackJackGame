@@ -234,6 +234,7 @@ export function BlackjackTable({
             <label htmlFor="bj-speed">Card speed</label>
             <select
               id="bj-speed"
+              aria-label="Card speed"
               value={speed}
               onChange={(event) => onSpeedChange(event.target.value as BlackjackTableProps['speed'])}
             >
@@ -289,7 +290,111 @@ export function BlackjackTable({
               </div>
             </section>
 
-            <div className="bj-felt-divider" aria-hidden="true"><span>♧</span></div>
+            <div className="bj-table-middle">
+              <section className={`bj-round-message${roundResult ? ` bj-round-message--${roundResult.tone}` : ''}`} aria-live="polite" aria-atomic="true">
+                <span className="bj-message-dot" aria-hidden="true" />
+                <div>
+                  <strong>{roundResult?.label ?? phaseLabel}</strong>
+                  <p>{displayMessage}</p>
+                </div>
+              </section>
+
+              <section className="bj-controls" aria-label="Game controls">
+                {state.phase === 'betting' ? (
+                  <div className="bj-bet-panel">
+                    <div className="bj-control-heading">
+                      <div>
+                        <span className="bj-zone-kicker">Wager</span>
+                        <h2>Choose your bet</h2>
+                      </div>
+                      <span className="bj-bet-limit">10–500 chips · steps of 10</span>
+                    </div>
+                    <div className="bj-bet-selector">
+                      <button
+                        type="button"
+                        className="bj-adjust-button"
+                        aria-label="Decrease bet by 10 chips"
+                        onClick={() => setBet(state.selectedBet - BET_STEP)}
+                        disabled={!canBet || state.selectedBet <= MIN_BET}
+                      >−</button>
+                      <output className="bj-bet-amount" aria-live="polite">
+                        <span key={state.selectedBet} className="motion-chip-count" data-motion-pulse="a">{formatChips(state.selectedBet)}</span>
+                        <small>selected bet</small>
+                      </output>
+                      <button
+                        type="button"
+                        className="bj-adjust-button"
+                        aria-label="Increase bet by 10 chips"
+                        onClick={() => setBet(state.selectedBet + BET_STEP)}
+                        disabled={!canBet || state.selectedBet >= maxBet}
+                      >+</button>
+                    </div>
+                    <div className="bj-chip-row" aria-label="Add chips to selected bet">
+                      {CHIP_VALUES.map((value) => (
+                        <button
+                          key={value}
+                          type="button"
+                          className={`bj-chip bj-chip--${value}`}
+                          onClick={() => setBet(state.selectedBet + value)}
+                          disabled={!canBet || state.selectedBet >= maxBet}
+                          aria-label={`Add ${value} chips to bet`}
+                        >
+                          <span>{value}</span>
+                          <small>+{value}</small>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bj-locked-bet">
+                    <span className="bj-zone-kicker">Current wager</span>
+                    <strong key={committedBet} className="motion-chip-count" data-motion-pulse="a">{formatChips(committedBet)}</strong>
+                    {state.hands.length > 1 ? <span>across {state.hands.length} hands</span> : <span>committed to this round</span>}
+                  </div>
+                )}
+
+                <div className="bj-action-panel">
+                  <div className="bj-control-heading bj-control-heading--actions">
+                    <div>
+                      <span className="bj-zone-kicker">Your move</span>
+                      <h2>Actions</h2>
+                    </div>
+                    <span className="bj-key-hint">Keyboard: H · S · D · P</span>
+                  </div>
+                  <div className="bj-actions-grid">
+                    <button type="button" className="bj-action-button bj-action-button--primary" onClick={() => send({ type: 'HIT' })} disabled={!can('HIT')}>
+                      <span>Hit</span><kbd>H</kbd>
+                    </button>
+                    <button type="button" className="bj-action-button" onClick={() => send({ type: 'STAND' })} disabled={!can('STAND')}>
+                      <span>Stand</span><kbd>S</kbd>
+                    </button>
+                    <button type="button" className="bj-action-button" onClick={() => send({ type: 'DOUBLE' })} disabled={!can('DOUBLE')}>
+                      <span>Double</span><kbd>D</kbd>
+                    </button>
+                    <button type="button" className="bj-action-button" onClick={() => send({ type: 'SPLIT' })} disabled={!can('SPLIT')}>
+                      <span>Split</span><kbd>P</kbd>
+                    </button>
+                  </div>
+                  <div className="bj-round-actions">
+                    {roundAction ? (
+                      <button
+                        type="button"
+                        className="bj-round-button"
+                        onClick={() => send({ type: roundAction.type })}
+                        disabled={roundAction.type === 'DEAL' && (!canBet || state.selectedBet > maxBet)}
+                      >
+                        {roundAction.label}<span aria-hidden="true">→</span>
+                      </button>
+                    ) : null}
+                    {can('NEW_GAME') ? (
+                      <button type="button" className="bj-reset-button" onClick={() => send({ type: 'NEW_GAME' })}>
+                        New game
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              </section>
+            </div>
 
             <section className="bj-player-area" aria-label="Your hands">
               <div className="bj-zone-heading bj-zone-heading--player">
@@ -316,110 +421,6 @@ export function BlackjackTable({
                 </div>
               ) : <p className="bj-table-placeholder">Place a bet to begin.</p>}
             </section>
-          </div>
-        </section>
-
-        <section className={`bj-round-message${roundResult ? ` bj-round-message--${roundResult.tone}` : ''}`} aria-live="polite" aria-atomic="true">
-          <span className="bj-message-dot" aria-hidden="true" />
-          <div>
-            <strong>{roundResult?.label ?? phaseLabel}</strong>
-            <p>{displayMessage}</p>
-          </div>
-        </section>
-
-        <section className="bj-controls" aria-label="Game controls">
-          {state.phase === 'betting' ? (
-            <div className="bj-bet-panel">
-              <div className="bj-control-heading">
-                <div>
-                  <span className="bj-zone-kicker">Wager</span>
-                  <h2>Choose your bet</h2>
-                </div>
-                <span className="bj-bet-limit">10–500 chips · steps of 10</span>
-              </div>
-              <div className="bj-bet-selector">
-                <button
-                  type="button"
-                  className="bj-adjust-button"
-                  aria-label="Decrease bet by 10 chips"
-                  onClick={() => setBet(state.selectedBet - BET_STEP)}
-                  disabled={!canBet || state.selectedBet <= MIN_BET}
-                >−</button>
-                <output className="bj-bet-amount" aria-live="polite">
-                  <span key={state.selectedBet} className="motion-chip-count" data-motion-pulse="a">{formatChips(state.selectedBet)}</span>
-                  <small>selected bet</small>
-                </output>
-                <button
-                  type="button"
-                  className="bj-adjust-button"
-                  aria-label="Increase bet by 10 chips"
-                  onClick={() => setBet(state.selectedBet + BET_STEP)}
-                  disabled={!canBet || state.selectedBet >= maxBet}
-                >+</button>
-              </div>
-              <div className="bj-chip-row" aria-label="Add chips to selected bet">
-                {CHIP_VALUES.map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    className={`bj-chip bj-chip--${value}`}
-                    onClick={() => setBet(state.selectedBet + value)}
-                    disabled={!canBet || state.selectedBet >= maxBet}
-                    aria-label={`Add ${value} chips to bet`}
-                  >
-                    <span>{value}</span>
-                    <small>+{value}</small>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="bj-locked-bet">
-              <span className="bj-zone-kicker">Current wager</span>
-              <strong key={committedBet} className="motion-chip-count" data-motion-pulse="a">{formatChips(committedBet)}</strong>
-              {state.hands.length > 1 ? <span>across {state.hands.length} hands</span> : <span>committed to this round</span>}
-            </div>
-          )}
-
-          <div className="bj-action-panel">
-            <div className="bj-control-heading bj-control-heading--actions">
-              <div>
-                <span className="bj-zone-kicker">Your move</span>
-                <h2>Actions</h2>
-              </div>
-              <span className="bj-key-hint">Keyboard: H · S · D · P</span>
-            </div>
-            <div className="bj-actions-grid">
-              <button type="button" className="bj-action-button bj-action-button--primary" onClick={() => send({ type: 'HIT' })} disabled={!can('HIT')}>
-                <span>Hit</span><kbd>H</kbd>
-              </button>
-              <button type="button" className="bj-action-button" onClick={() => send({ type: 'STAND' })} disabled={!can('STAND')}>
-                <span>Stand</span><kbd>S</kbd>
-              </button>
-              <button type="button" className="bj-action-button" onClick={() => send({ type: 'DOUBLE' })} disabled={!can('DOUBLE')}>
-                <span>Double</span><kbd>D</kbd>
-              </button>
-              <button type="button" className="bj-action-button" onClick={() => send({ type: 'SPLIT' })} disabled={!can('SPLIT')}>
-                <span>Split</span><kbd>P</kbd>
-              </button>
-            </div>
-            <div className="bj-round-actions">
-              {roundAction ? (
-                <button
-                  type="button"
-                  className="bj-round-button"
-                  onClick={() => send({ type: roundAction.type })}
-                  disabled={roundAction.type === 'DEAL' && (!canBet || state.selectedBet > maxBet)}
-                >
-                  {roundAction.label}<span aria-hidden="true">→</span>
-                </button>
-              ) : null}
-              {can('NEW_GAME') ? (
-                <button type="button" className="bj-reset-button" onClick={() => send({ type: 'NEW_GAME' })}>
-                  New game
-                </button>
-              ) : null}
-            </div>
           </div>
         </section>
 
