@@ -76,8 +76,8 @@ function finishAnimation(animation: Animation, animationRef: { current: Animatio
 
 function getShoeOffset(wrapper: HTMLDivElement): { x: number; y: number } {
   const table = wrapper.closest('.bj-table')
-  // The release point lives inside the animated SVG hand, so it may be an
-  // SVGElement rather than an HTMLElement. Both expose getBoundingClientRect.
+  // The release point can live inside animated dealer artwork; both HTML and
+  // SVG elements expose getBoundingClientRect for live position sampling.
   const shoe = table?.querySelector('[data-motion-shoe]')
     ?? document.querySelector('[data-motion-shoe]')
   const target = wrapper.getBoundingClientRect()
@@ -175,7 +175,7 @@ export function AnimatedCard({
       if (!wrapper.isConnected) return
 
       // Sample at release time: the dealer has begun the arm sweep, and this
-      // point follows the articulated SVG wrist rather than a fixed table spot.
+      // point follows the moving card hand rather than a fixed table spot.
       const { x, y } = getShoeOffset(wrapper)
       const arcLift = Math.min(74, Math.max(24, Math.abs(y) * 0.14))
       const to: Keyframe = {

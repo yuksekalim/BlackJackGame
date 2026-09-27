@@ -24,6 +24,8 @@ States: `ready`, `blocked`, `in progress`, `review`, `done`. Dora updates owners
 | T-17 | B-06 | Dealer figure agent + Dora | done | Original dealer holds/deals cards with shoulder, forearm, and wrist motion; card flight tracks the moving release point; normal, fast, instant, interruption, and independent QA checked |
 | T-18 | B-03 / B-05 | Gameplay agent + Dora | done | Engine and UI permit 10-chip steps through bankroll without a fixed 500 cap; 1,000-chip live wager and engine 2,000-bankroll case verified |
 | T-19 | B-05 | Dora | done | Larger player cards fit 1366×768, 1280×720, 900×700, and 320×700 checks without horizontal overflow or added desktop page height |
+| T-20 | B-05 / B-06 | Dora | done | Higgsfield dealer cutout and shoulder layers integrated; cards launch from moving hand; desktop/mobile, normal/fast/instant, reduced-motion CSS, and interrupted New game checked |
+| T-21 | B-05 | Deck and UI agent + Dora | done | 10/50/100/500 choice changes both + and −; browser verified selection, increment/decrement, bankroll/minimum clamps, and 320px fit |
 
 ## Handoff Format
 

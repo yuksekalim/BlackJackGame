@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { scoreHand } from '../game'
 import type { Card, GameAction, GameState, PlayerHand } from '../game/types'
 import { AnimatedCard } from '../motion/AnimatedCard'
@@ -121,6 +121,7 @@ export function BlackjackTable({
   onSpeedChange,
   presentation,
 }: BlackjackTableProps) {
+  const [betStep, setBetStep] = useState(CHIP_VALUES[0])
   const can = (type: GameAction['type']) => legalActions.includes(type)
     && (type === 'NEW_GAME' || !presentation?.busy)
   const send = (action: GameAction) => {
@@ -301,14 +302,36 @@ export function BlackjackTable({
                         <span className="bj-zone-kicker">Wager</span>
                         <h2>Choose your bet</h2>
                       </div>
-                      <span className="bj-bet-limit">Max {formatChips(maxBet)} · steps of 10</span>
+                      <span className="bj-bet-limit">Max {formatChips(maxBet)} · min 10</span>
+                    </div>
+                    <div className="bj-bet-steps">
+                      <span className="bj-bet-step-label">Change by</span>
+                      <div className="bj-chip-row" role="group" aria-label="Select bet adjustment amount">
+                        {CHIP_VALUES.map((value) => {
+                          const selected = betStep === value
+                          return (
+                            <button
+                              key={value}
+                              type="button"
+                              className={`bj-chip bj-chip--${value}${selected ? ' bj-chip--selected' : ''}`}
+                              onClick={() => setBetStep(value)}
+                              disabled={!canBet}
+                              aria-label={selected ? `${value}-chip step selected` : `Select ${value}-chip step`}
+                              aria-pressed={selected}
+                            >
+                              <span>{value}</span>
+                              <small>{selected ? 'selected' : 'step'}</small>
+                            </button>
+                          )
+                        })}
+                      </div>
                     </div>
                     <div className="bj-bet-selector">
                       <button
                         type="button"
                         className="bj-adjust-button"
-                        aria-label="Decrease bet by 10 chips"
-                        onClick={() => setBet(state.selectedBet - BET_STEP)}
+                        aria-label={`Decrease bet by ${betStep} chips`}
+                        onClick={() => setBet(state.selectedBet - betStep)}
                         disabled={!canBet || state.selectedBet <= MIN_BET}
                       >−</button>
                       <output className="bj-bet-amount" aria-live="polite">
@@ -318,25 +341,10 @@ export function BlackjackTable({
                       <button
                         type="button"
                         className="bj-adjust-button"
-                        aria-label="Increase bet by 10 chips"
-                        onClick={() => setBet(state.selectedBet + BET_STEP)}
+                        aria-label={`Increase bet by ${betStep} chips`}
+                        onClick={() => setBet(state.selectedBet + betStep)}
                         disabled={!canBet || state.selectedBet >= maxBet}
                       >+</button>
-                    </div>
-                    <div className="bj-chip-row" aria-label="Add chips to selected bet">
-                      {CHIP_VALUES.map((value) => (
-                        <button
-                          key={value}
-                          type="button"
-                          className={`bj-chip bj-chip--${value}`}
-                          onClick={() => setBet(state.selectedBet + value)}
-                          disabled={!canBet || state.selectedBet >= maxBet}
-                          aria-label={`Add ${value} chips to bet`}
-                        >
-                          <span>{value}</span>
-                          <small>+{value}</small>
-                        </button>
-                      ))}
                     </div>
                   </div>
                 ) : (

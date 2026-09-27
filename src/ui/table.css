@@ -87,15 +87,18 @@
 .bj-control-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:.8rem; }
 .bj-control-heading h2 { font-size:1.05rem; }
 .bj-bet-limit,.bj-key-hint { align-self:flex-end; color:#bcb8a4; font-size:.69rem; text-align:right; }
+.bj-bet-steps { display:grid; gap:.38rem; margin:.55rem 0 .35rem; }
+.bj-bet-step-label { color:#c6c1ad; font-size:.66rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
 .bj-bet-selector { display:grid; grid-template-columns:2.5rem 1fr 2.5rem; align-items:center; gap:.7rem; margin:.85rem 0 .6rem; }
 .bj-adjust-button { display:grid; width:2.45rem; height:2.45rem; place-items:center; border:1px solid rgba(233,216,170,.34); border-radius:11px; color:#f0dfa9; background:rgba(239,221,174,.08); font-size:1.25rem; cursor:pointer; }
 .bj-bet-amount { display:grid; justify-items:center; color:#fcf3dc; font-size:1.28rem; font-weight:800; font-variant-numeric:tabular-nums; }
 .bj-bet-amount small { margin-top:.03rem; color:#bdb9a8; font-size:.63rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; }
-.bj-chip-row { display:flex; align-items:center; justify-content:center; gap:.6rem; }
-.bj-chip { display:flex; align-items:center; justify-content:center; gap:.35rem; min-width:4.4rem; padding:.45rem .55rem; border:1px dashed rgba(245,239,222,.63); border-radius:99px; color:#fff9ec; background:#ab393e; font-size:.76rem; font-weight:800; box-shadow:inset 0 0 0 3px rgba(255,255,255,.13); cursor:pointer; }
+.bj-chip-row { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.4rem; }
+.bj-chip { display:grid; align-content:center; justify-items:center; gap:.05rem; min-width:0; padding:.38rem .35rem; border:1px dashed rgba(245,239,222,.63); border-radius:99px; color:#fff9ec; background:#ab393e; font-size:.76rem; font-weight:800; box-shadow:inset 0 0 0 3px rgba(255,255,255,.13); cursor:pointer; }
 .bj-chip--50 { color:#183e37; background:#e3cc8d; }
 .bj-chip--100 { background:#204c76; }
-.bj-chip small { color:inherit; font-size:.6rem; opacity:.82; }
+.bj-chip--selected { border-style:solid; border-color:#fff0bd; box-shadow:0 0 0 2px rgba(255,240,189,.3),inset 0 0 0 3px rgba(255,255,255,.13); transform:translateY(-1px); }
+.bj-chip small { color:inherit; font-size:.55rem; line-height:1.1; opacity:.9; }
 .bj-action-panel { display:flex; flex-direction:column; }
 .bj-actions-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.55rem; margin:.82rem 0 .65rem; }
 .bj-action-button { display:flex; align-items:center; justify-content:center; gap:.5rem; min-height:2.9rem; padding:.58rem .48rem; border:1px solid rgba(236,222,184,.26); border-radius:11px; color:#f7f1e3; background:rgba(242,234,212,.075); font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }
@@ -177,8 +180,8 @@
   .bj-speed-control { gap:.38rem; font-size:.72rem; }
   .bj-speed-control select { min-width:6.3rem; }
   .bj-round-pill { padding:.42rem .56rem; }
-  .bj-chip-row { gap:.38rem; }
-  .bj-chip { min-width:3.85rem; padding:.42rem .38rem; }
+  .bj-table-middle .bj-chip-row { gap:.22rem; }
+  .bj-table-middle .bj-chip { padding:.32rem .2rem; font-size:.7rem; }
   .bj-bet-limit { max-width:8.3rem; font-size:.61rem; }
 }
 
@@ -229,12 +232,16 @@
 .bj-table-middle .bj-locked-bet { padding:.55rem .7rem; border-radius:13px; }
 .bj-table-middle .bj-bet-panel { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.25rem .6rem; }
 .bj-table-middle .bj-bet-panel .bj-control-heading { grid-column:1 / -1; }
-.bj-table-middle .bj-bet-selector { grid-column:1; grid-template-columns:2rem minmax(0,1fr) 2rem; gap:.3rem; margin:0; }
+.bj-table-middle .bj-bet-steps,
+.bj-table-middle .bj-bet-selector { grid-column:1 / -1; }
+.bj-table-middle .bj-bet-steps { gap:.28rem; margin:.25rem 0 .1rem; }
+.bj-table-middle .bj-bet-step-label { font-size:.57rem; }
+.bj-table-middle .bj-chip-row { gap:.3rem; }
+.bj-table-middle .bj-chip { padding:.32rem .3rem; }
+.bj-table-middle .bj-bet-selector { grid-template-columns:2rem minmax(0,1fr) 2rem; gap:.3rem; margin:.1rem 0 0; }
 .bj-table-middle .bj-adjust-button { width:2rem; height:2rem; border-radius:8px; }
 .bj-table-middle .bj-bet-amount { font-size:1rem; }
 .bj-table-middle .bj-bet-amount small { font-size:.56rem; }
-.bj-table-middle .bj-chip-row { grid-column:2; gap:.3rem; }
-.bj-table-middle .bj-chip { min-width:3.1rem; padding:.32rem .4rem; }
 .bj-table-middle .bj-action-panel { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.25rem .55rem; }
 .bj-table-middle .bj-action-panel .bj-control-heading { grid-column:1 / -1; }
 .bj-table-middle .bj-actions-grid { grid-column:1; grid-row:2; gap:.35rem; margin:0; }
@@ -283,9 +290,8 @@
   .bj-table-middle .bj-controls { grid-template-columns:1fr; }
   .bj-table-middle .bj-bet-panel { grid-template-columns:1fr; }
   .bj-table-middle .bj-bet-panel .bj-control-heading,
-  .bj-table-middle .bj-bet-selector,
-  .bj-table-middle .bj-chip-row { grid-column:1; }
-  .bj-table-middle .bj-chip-row { justify-content:flex-start; }
+  .bj-table-middle .bj-bet-steps,
+  .bj-table-middle .bj-bet-selector { grid-column:1; }
   .bj-table-middle .bj-action-panel { display:flex; }
   .bj-table-middle .bj-actions-grid { width:100%; }
   .bj-table-middle .bj-round-actions { justify-content:flex-end; width:100%; }
@@ -305,8 +311,8 @@
     width:min(100%,790px);
     margin-inline:auto;
   }
-  .bj-dealer-area .dealer-figure-stage { grid-column:1; grid-row:1 / 3; align-self:end; height:clamp(105px,15svh,125px); }
-  .bj-dealer-area .dealer-figure__artboard { width:200%; max-width:none; }
+  .bj-dealer-area .dealer-figure-stage { grid-column:1; grid-row:1 / 3; align-self:end; height:clamp(108px,16svh,125px); }
+  .bj-dealer-area .dealer-figure__artboard { width:auto; height:100%; max-width:none; }
   .bj-dealer-area .bj-zone-heading { grid-column:2; grid-row:1; width:100%; }
   .bj-dealer-area .bj-table-cards { grid-column:2; grid-row:2; }
   .bj-table-content .bj-dealer-area .bj-card-slot { width:clamp(4.4rem,10svh,6rem); }
@@ -326,15 +332,15 @@
     margin-inline:auto;
   }
   .bj-dealer-area .dealer-figure-stage { grid-column:1; grid-row:1 / 3; align-self:end; height:clamp(115px,16vw,145px); }
-  .bj-dealer-area .dealer-figure__artboard { width:200%; max-width:none; }
+  .bj-dealer-area .dealer-figure__artboard { width:auto; height:100%; max-width:none; }
   .bj-dealer-area .bj-zone-heading { grid-column:2; grid-row:1; width:100%; }
   .bj-dealer-area .bj-table-cards { grid-column:2; grid-row:2; }
   .bj-table-middle .bj-controls { grid-template-columns:minmax(215px,.8fr) minmax(0,1.2fr); }
   .bj-table-middle .bj-bet-panel { grid-template-columns:1fr; }
   .bj-table-middle .bj-bet-panel .bj-control-heading,
-  .bj-table-middle .bj-bet-selector,
-  .bj-table-middle .bj-chip-row { grid-column:1; }
-  .bj-table-middle .bj-chip-row { justify-content:flex-start; }
+  .bj-table-middle .bj-bet-steps,
+  .bj-table-middle .bj-bet-selector { grid-column:1; }
+  .bj-table-middle .bj-chip-row { gap:.3rem; }
   .bj-table-middle .bj-action-panel { display:flex; }
   .bj-table-middle .bj-actions-grid { width:100%; }
   .bj-table-middle .bj-round-actions { justify-content:flex-end; width:100%; }
