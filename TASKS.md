@@ -26,6 +26,7 @@ States: `ready`, `blocked`, `in progress`, `review`, `done`. Dora updates owners
 | T-19 | B-05 | Dora | done | Larger player cards fit 1366×768, 1280×720, 900×700, and 320×700 checks without horizontal overflow or added desktop page height |
 | T-20 | B-05 / B-06 | Dora | done | Higgsfield dealer cutout and shoulder layers integrated; cards launch from moving hand; desktop/mobile, normal/fast/instant, reduced-motion CSS, and interrupted New game checked |
 | T-21 | B-05 | Deck and UI agent + Dora | done | 10/50/100/500 choice changes both + and −; browser verified selection, increment/decrement, bankroll/minimum clamps, and 320px fit |
+| T-22 | B-06 | Motion agent + Dora | done | Remotion Player uses cleaned seven-layer dealer rig with frame-driven shoulder/elbow deal and reveal gestures; Studio and live normal/fast/instant, interrupted New game, hand-sourced card flight, build, lint, and 36 tests checked |
 
 ## Handoff Format
 

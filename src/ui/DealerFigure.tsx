@@ -1,6 +1,6 @@
-import dealerCore from '../../assets/dealer/dealer-core.webp'
-import dealerLeftArm from '../../assets/dealer/dealer-left-arm.webp'
-import dealerRightArm from '../../assets/dealer/dealer-right-arm.webp'
+import { useEffect, useState } from 'react'
+import { Player } from '@remotion/player'
+import { DealerMotion } from '../remotion/DealerMotion'
 import './dealer-figure.css'
 
 export type DealerGesture = 'idle' | 'deal-player' | 'deal-dealer' | 'reveal' | 'win' | 'loss'
@@ -15,13 +15,37 @@ export interface DealerFigureProps {
   className?: string
 }
 
-/** Higgsfield artwork is split at the shoulders so the card hand can lead each deal. */
+function readReducedMotion(): boolean {
+  return typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+/** Remotion keeps the dealer's joint motion frame-accurate with the live table. */
 export function DealerFigure({
   gesture = 'idle',
   speed = 'normal',
   motionKey,
   className,
 }: DealerFigureProps) {
+  const [reducedMotion, setReducedMotion] = useState(readReducedMotion)
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return
+
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReducedMotion(query.matches)
+    update()
+
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', update)
+      return () => query.removeEventListener('change', update)
+    }
+
+    query.addListener(update)
+    return () => query.removeListener(update)
+  }, [])
+
   return (
     <div
       className={`dealer-figure-stage${className ? ` ${className}` : ''}`}
@@ -30,16 +54,20 @@ export function DealerFigure({
       aria-hidden="true"
     >
       <div className="dealer-figure__artboard">
-        <div className="dealer-figure__rig" key={motionKey ?? gesture}>
-          <div className="dealer-figure__left-arm">
-            <img src={dealerLeftArm} alt="" draggable="false" />
-            <span className="dealer-figure__release-point" data-motion-shoe />
-          </div>
-          <div className="dealer-figure__right-arm">
-            <img src={dealerRightArm} alt="" draggable="false" />
-          </div>
-          <img className="dealer-figure__core" src={dealerCore} alt="" draggable="false" />
-        </div>
+        <Player
+          key={`${motionKey ?? gesture}-${gesture}-${speed === 'instant'}-${reducedMotion}`}
+          component={DealerMotion}
+          inputProps={{ gesture }}
+          compositionWidth={1391}
+          compositionHeight={1230}
+          fps={60}
+          durationInFrames={gesture === 'idle' ? 210 : 36}
+          autoPlay={speed !== 'instant' && !reducedMotion}
+          loop={gesture === 'idle'}
+          playbackRate={speed === 'fast' ? 2 : 1}
+          initiallyMuted
+          style={{ width: '100%', height: '100%', overflow: 'visible' }}
+        />
       </div>
     </div>
   )
