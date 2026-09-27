@@ -56,6 +56,13 @@ function cancelAnimation(animationRef: { current: Animation | null }): void {
   animation.cancel()
 }
 
+function cancelScheduledDeal(timerRef: { current: number | null }): void {
+  if (timerRef.current === null) return
+
+  window.clearTimeout(timerRef.current)
+  timerRef.current = null
+}
+
 function finishAnimation(animation: Animation, animationRef: { current: Animation | null }): void {
   animation.onfinish = () => {
     if (animationRef.current !== animation) return
@@ -69,8 +76,10 @@ function finishAnimation(animation: Animation, animationRef: { current: Animatio
 
 function getShoeOffset(wrapper: HTMLDivElement): { x: number; y: number } {
   const table = wrapper.closest('.bj-table')
-  const shoe = table?.querySelector<HTMLElement>('[data-motion-shoe]')
-    ?? document.querySelector<HTMLElement>('[data-motion-shoe]')
+  // The release point lives inside the animated SVG hand, so it may be an
+  // SVGElement rather than an HTMLElement. Both expose getBoundingClientRect.
+  const shoe = table?.querySelector('[data-motion-shoe]')
+    ?? document.querySelector('[data-motion-shoe]')
   const target = wrapper.getBoundingClientRect()
 
   if (!shoe) return { x: -Math.max(target.width * 1.45, 92), y: -Math.max(target.height * 1.1, 78) }
@@ -107,6 +116,7 @@ export function AnimatedCard({
   const flipRef = useRef<HTMLDivElement>(null)
   const dealAnimationRef = useRef<Animation | null>(null)
   const flipAnimationRef = useRef<Animation | null>(null)
+  const dealStartTimerRef = useRef<number | null>(null)
   const dealStateRef = useRef<DealState | null>(null)
   const flipStateRef = useRef<FlipState | null>(null)
   const identity = `${cardId}:${card.suit}-${card.rank}`
@@ -133,6 +143,7 @@ export function AnimatedCard({
     if (!wrapper) return
 
     const previous = dealStateRef.current
+    const pendingLaunch = dealStartTimerRef.current !== null
     // Clearing an entrance token when the sequence completes must not replay
     // the last card. Only a new explicit token requests another entrance.
     const identityChanged = previous?.identity !== identity
@@ -148,47 +159,66 @@ export function AnimatedCard({
       }
     }
 
+    const resumePendingLaunch = pendingLaunch && previous?.speed !== speed
+    cancelScheduledDeal(dealStartTimerRef)
     cancelAnimation(dealAnimationRef)
+    wrapper.style.opacity = ''
     dealStateRef.current = { identity, speed, entranceKey }
 
     if (speed === 'instant' || prefersReducedMotion || typeof wrapper.animate !== 'function') return
     if (identityChanged && !animateOnMount) return
-    if (!identityChanged && !continuedFrom) return
+    if (!identityChanged && !continuedFrom && !resumePendingLaunch) return
 
-    const { x, y } = getShoeOffset(wrapper)
-    const arcLift = Math.min(74, Math.max(24, Math.abs(y) * 0.14))
-    const to: Keyframe = {
-      opacity: 1,
-      transform: 'translate3d(0, 0, 0) rotate(0deg) scale(1)',
-    }
-    const from: Keyframe = identityChanged
-      ? {
-          opacity: 0.16,
-          filter: 'brightness(1.18) drop-shadow(0 17px 12px rgba(0, 0, 0, .34))',
-          transform: `translate3d(${x}px, ${y}px, 0) rotate(-15deg) scale(.78)`,
-        }
-      : continuedFrom!
-    const middle: Keyframe = {
-      offset: 0.62,
-      opacity: 1,
-      filter: 'brightness(1.08) drop-shadow(0 12px 9px rgba(0, 0, 0, .3))',
-      transform: `translate3d(${x * 0.34}px, ${y * 0.34 - arcLift}px, 0) rotate(5deg) scale(1.045)`,
-    }
-    const landing: Keyframe = {
-      offset: 0.87,
-      opacity: 1,
-      filter: 'brightness(1.03) drop-shadow(0 7px 6px rgba(0, 0, 0, .28))',
-      transform: 'translate3d(0, -5px, 0) rotate(-1deg) scale(1.012)',
-    }
-    const keyframes = continuedFrom ? [from, to] : [from, middle, landing, to]
-    const animation = wrapper.animate(keyframes, {
-      duration: speed === 'fast' ? 250 : 510,
-      easing: 'cubic-bezier(0.16, 0.76, 0.22, 1)',
-      fill: 'both',
-    })
+    const startDeal = () => {
+      dealStartTimerRef.current = null
+      wrapper.style.opacity = ''
+      if (!wrapper.isConnected) return
 
-    dealAnimationRef.current = animation
-    finishAnimation(animation, dealAnimationRef)
+      // Sample at release time: the dealer has begun the arm sweep, and this
+      // point follows the articulated SVG wrist rather than a fixed table spot.
+      const { x, y } = getShoeOffset(wrapper)
+      const arcLift = Math.min(74, Math.max(24, Math.abs(y) * 0.14))
+      const to: Keyframe = {
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0) rotate(0deg) scale(1)',
+      }
+      const from: Keyframe = continuedFrom ?? {
+        opacity: 0.16,
+        filter: 'brightness(1.18) drop-shadow(0 17px 12px rgba(0, 0, 0, .34))',
+        transform: `translate3d(${x}px, ${y}px, 0) rotate(-15deg) scale(.78)`,
+      }
+      const middle: Keyframe = {
+        offset: 0.62,
+        opacity: 1,
+        filter: 'brightness(1.08) drop-shadow(0 12px 9px rgba(0, 0, 0, .3))',
+        transform: `translate3d(${x * 0.34}px, ${y * 0.34 - arcLift}px, 0) rotate(5deg) scale(1.045)`,
+      }
+      const landing: Keyframe = {
+        offset: 0.87,
+        opacity: 1,
+        filter: 'brightness(1.03) drop-shadow(0 7px 6px rgba(0, 0, 0, .28))',
+        transform: 'translate3d(0, -5px, 0) rotate(-1deg) scale(1.012)',
+      }
+      const keyframes = continuedFrom ? [from, to] : [from, middle, landing, to]
+      const animation = wrapper.animate(keyframes, {
+        duration: speed === 'fast' ? 250 : 510,
+        easing: 'cubic-bezier(0.16, 0.76, 0.22, 1)',
+        fill: 'both',
+      })
+
+      dealAnimationRef.current = animation
+      finishAnimation(animation, dealAnimationRef)
+    }
+
+    if (continuedFrom) {
+      startDeal()
+      return
+    }
+
+    // Give the articulated hand a short windup, then measure its live release
+    // point. The brief hidden interval prevents a flash at the landing slot.
+    wrapper.style.opacity = '0'
+    dealStartTimerRef.current = window.setTimeout(startDeal, speed === 'fast' ? 24 : 48)
   }, [identity, speed, prefersReducedMotion, animateOnMount, entranceKey])
 
   useSafeLayoutEffect(() => {
@@ -228,8 +258,10 @@ export function AnimatedCard({
 
   useSafeLayoutEffect(() => {
     return () => {
+      cancelScheduledDeal(dealStartTimerRef)
       cancelAnimation(dealAnimationRef)
       cancelAnimation(flipAnimationRef)
+      if (wrapperRef.current) wrapperRef.current.style.opacity = ''
       // Reset refs so React Strict Mode's development remount can replay the
       // entrance animation, while a real unmount leaves no active effects.
       dealStateRef.current = null

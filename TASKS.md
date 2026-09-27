@@ -20,6 +20,10 @@ States: `ready`, `blocked`, `in progress`, `review`, `done`. Dora updates owners
 | T-13 | B-05 | Dora | done | Centered player cards and net chip result banner verified in live win/loss rounds and at 320px; 2 result tests and independent QA passed |
 | T-14 | B-03 | Gameplay agent + Dora | done | Custom first-side-to-five rule, fifth-card bust precedence, split settlement, UI copy, and docs verified by 6 rule tests and independent QA |
 | T-15 | B-05 | Dora | done | Betting, actions, and result moved onto felt; live 1710×952, 1366×768, 1024×768, 900×700, 800×900, and 320×700 layouts checked; build, lint, 34 tests, and diff check pass |
+| T-16 | B-03 | Gameplay agent + Dora | done | Valid fifth cards win; fifth-card busts lose for player, dealer, and split side; result copy and rules updated; deterministic tests and independent QA passed |
+| T-17 | B-06 | Dealer figure agent + Dora | done | Original dealer holds/deals cards with shoulder, forearm, and wrist motion; card flight tracks the moving release point; normal, fast, instant, interruption, and independent QA checked |
+| T-18 | B-03 / B-05 | Gameplay agent + Dora | done | Engine and UI permit 10-chip steps through bankroll without a fixed 500 cap; 1,000-chip live wager and engine 2,000-bankroll case verified |
+| T-19 | B-05 | Dora | done | Larger player cards fit 1366×768, 1280×720, 900×700, and 320×700 checks without horizontal overflow or added desktop page height |
 
 ## Handoff Format
 

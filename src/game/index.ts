@@ -19,14 +19,14 @@ const DEFAULT_BET = 100
 type ContestSide = 'player' | 'dealer'
 
 /**
- * House-rule policy: the first side to reach five cards wins the whole round,
- * even when its fifth card busts. A split hand reaching five wins for the
- * player side, so every committed hand is settled as a win.
+ * House-rule policy: the first side to reach five cards wins the whole round
+ * when that five-card hand totals 21 or less. If its fifth card busts, the
+ * other side wins. A split hand reaching five resolves the player side, so all
+ * committed hands share the round outcome.
  */
 const FIVE_CARD_RULE = {
   cardCount: 5,
   appliesTo: ['player', 'dealer'] as const,
-  countsBusts: true,
 } as const
 
 /** Create a new betting state and a shuffled six-deck shoe. */
@@ -294,8 +294,9 @@ function applyHit(state: GameState): GameTransition {
     { type: 'card-dealt', recipient: 'player', card, handId: hand.id, faceDown: false },
   ]
 
-  if (getFiveCardWinner('player', cards)) {
-    return settleFiveCardRound(nextState, 'player', events)
+  const fiveCardWinner = getFiveCardWinner('player', cards)
+  if (fiveCardWinner) {
+    return settleFiveCardRound(nextState, 'player', fiveCardWinner, events)
   }
 
   return busted || reachedTwentyOne
@@ -468,21 +469,21 @@ function beginDealerTurn(
 
   let shoe = nextState.shoe
   let dealerCards = nextState.dealerCards
-  let dealerWonByFiveCards = false
+  let fiveCardWinner: ContestSide | null = null
   while (scoreHand(dealerCards).total < 17 && shoe.length > 0) {
     const [card, ...remaining] = shoe
     shoe = remaining
     dealerCards = [...dealerCards, card]
     events.push({ type: 'card-dealt', recipient: 'dealer', card, faceDown: false })
-    if (getFiveCardWinner('dealer', dealerCards)) {
-      dealerWonByFiveCards = true
+    fiveCardWinner = getFiveCardWinner('dealer', dealerCards)
+    if (fiveCardWinner) {
       break
     }
   }
   nextState = { ...nextState, shoe, dealerCards }
 
-  if (dealerWonByFiveCards) {
-    return settleFiveCardRound(nextState, 'dealer', events)
+  if (fiveCardWinner) {
+    return settleFiveCardRound(nextState, 'dealer', fiveCardWinner, events)
   }
 
   const dealerScore = scoreHand(dealerCards)
@@ -526,25 +527,31 @@ function settleHands(
 
 function settleFiveCardRound(
   state: GameState,
+  fiveCardSide: ContestSide,
   winner: ContestSide,
   priorEvents: GameEvent[],
 ): GameTransition {
   const winningOutcome: Outcome = winner === 'player' ? 'win' : 'loss'
-  const message = winner === 'player'
-    ? 'Your side reached five cards and wins the round.'
-    : 'The dealer reached five cards and wins the round.'
+  const message = fiveCardSide === 'player'
+    ? winner === 'dealer'
+      ? 'You busted on your fifth card. The dealer wins the round.'
+      : 'You reached five cards without busting and win the round.'
+    : winner === 'player'
+      ? 'The dealer busted on its fifth card. You win the round.'
+      : 'The dealer reached five cards without busting and wins the round.'
   return settleHands(state, () => winningOutcome, priorEvents, message)
 }
 
 function getFiveCardWinner(side: ContestSide, cards: Card[]): ContestSide | null {
   if (
     cards.length < FIVE_CARD_RULE.cardCount ||
-    !FIVE_CARD_RULE.appliesTo.includes(side) ||
-    (!FIVE_CARD_RULE.countsBusts && scoreHand(cards).busted)
+    !FIVE_CARD_RULE.appliesTo.includes(side)
   ) {
     return null
   }
-  return side
+  return scoreHand(cards).busted
+    ? side === 'player' ? 'dealer' : 'player'
+    : side
 }
 
 function compareHandToDealer(hand: PlayerHand, dealer: ReturnType<typeof scoreHand>): Outcome {
@@ -606,7 +613,6 @@ function replaceHand(
 function isAllowedBet(amount: number, bankroll: number): boolean {
   return Number.isInteger(amount) &&
     amount >= 10 &&
-    amount <= 500 &&
     amount % 10 === 0 &&
     amount <= bankroll
 }

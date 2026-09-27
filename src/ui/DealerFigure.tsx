@@ -13,9 +13,8 @@ export interface DealerFigureProps {
 }
 
 /**
- * A decorative, original vector dealer stage. Place it before the dealer heading
- * and cards inside `.bj-dealer-area`; its invisible source anchor is used by
- * AnimatedCard to begin each card flight at the dealer's right hand.
+ * An original, Japanese-inspired vector dealer. The releasing hand carries a
+ * live SVG source point so AnimatedCard can sample its current articulated pose.
  */
 export function DealerFigure({
   gesture = 'idle',
@@ -30,80 +29,153 @@ export function DealerFigure({
       className={`dealer-figure-stage${className ? ` ${className}` : ''}`}
       data-gesture={gesture}
       data-motion-speed={speed}
-      data-motion-key={motionKey}
+      data-motion-key={replayKey}
       aria-hidden="true"
     >
       <div className="dealer-figure__artboard">
         <svg
           className="dealer-figure__art"
-          viewBox="80 0 240 200"
+          viewBox="0 0 320 200"
           preserveAspectRatio="xMidYMax meet"
           focusable="false"
         >
-          <g className="dealer-figure__back-hair">
-            <path d="M166 45c-19 3-30 18-29 39 1 18 8 27 4 44 11-2 20-9 23-20l16-49z" fill="#282220" />
-            <path d="M149 94c-7 12-5 25-1 33 5-3 10-10 11-19z" fill="#45302a" />
+          <defs>
+            <linearGradient id="dealer-hair" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#332523" />
+              <stop offset=".5" stopColor="#211e21" />
+              <stop offset="1" stopColor="#171c23" />
+            </linearGradient>
+            <linearGradient id="dealer-skin" x1=".15" y1="0" x2=".82" y2="1">
+              <stop offset="0" stopColor="#ffddbd" />
+              <stop offset=".72" stopColor="#edb797" />
+              <stop offset="1" stopColor="#d9957a" />
+            </linearGradient>
+            <linearGradient id="dealer-coat" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor="#171e2b" />
+              <stop offset=".48" stopColor="#273244" />
+              <stop offset="1" stopColor="#151c29" />
+            </linearGradient>
+            <linearGradient id="dealer-sleeve" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#fffdf6" />
+              <stop offset="1" stopColor="#d8d6cd" />
+            </linearGradient>
+            <linearGradient id="dealer-card-back" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#34475d" />
+              <stop offset="1" stopColor="#172337" />
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="160" cy="197" rx="57" ry="3" fill="#111b19" opacity=".12" />
+
+          {/* Hair falls behind the shoulders and frames the face. */}
+          <g className="dealer-figure__hair-back">
+            <path d="M137 49c-8 15-13 34-12 56 1 20 9 34 24 41l18-16 33 13c13-11 17-29 15-50-2-28-13-47-37-54z" fill="url(#dealer-hair)" />
+            <path d="M189 17c13 1 22 10 20 22-1 10-9 17-19 18-8-5-12-14-10-23 1-8 4-13 9-17z" fill="#252126" />
+            <path d="M138 67c-4 17-4 39 1 53m55-52c5 19 6 39 2 54" fill="none" stroke="#59403a" strokeWidth="2" strokeLinecap="round" opacity=".7" />
           </g>
 
-          <path className="dealer-figure__shirt-back" d="M145 105c8-9 22-14 36-14l19 16 19-16c15 0 28 6 36 15 15 17 23 43 27 94H118c4-51 12-78 27-95z" fill="#e8e5dc" />
+          {/* Neck and the clean silhouette of the uniform. */}
+          <path d="M150 78h20v24c0 7-4 11-10 11s-10-4-10-11z" fill="url(#dealer-skin)" />
+          <path d="M125 101c8-8 18-11 28-12l7 14 7-14c11 1 21 4 29 12 9 13 13 45 17 99H107c4-54 8-86 18-99z" fill="url(#dealer-sleeve)" />
 
-          <g
-            className="dealer-figure__arm dealer-figure__arm--left"
-            key={`left-${replayKey}`}
-          >
-            <path d="M151 101c-15 1-27 7-35 18l-21 34c-3 5-2 10 3 13l8 4c5 2 9 0 12-5l20-27c6-7 14-11 24-14l8-13z" fill="#f1eee6" stroke="#c7c5bc" strokeWidth="2" strokeLinejoin="round" />
-            <path d="m99 151 17 9-5 9-17-9z" fill="#cbd0c8" stroke="#aeb5ae" strokeWidth="1.5" />
-            <path d="M94 158c-3-4-2-8 2-10 3-2 6 0 7 3l4-4c2-2 5-1 5 2l-2 9c-1 4-5 6-9 5z" fill="#e8ad91" stroke="#9f6854" strokeWidth="1.5" strokeLinejoin="round" />
+          {/* Rear arms make the figure feel planted behind the table. */}
+          <g transform="translate(122 105) scale(-1 1)">
+            <g className="dealer-figure__joint-motion dealer-figure__upper dealer-figure__upper--stock" key={`stock-arm-${replayKey}`}>
+              <path d="M0 1c11 0 23 4 30 13l9 13-8 9c-8-1-17 2-23 8C3 36 1 26 0 16z" fill="url(#dealer-sleeve)" stroke="#b9b6ad" strokeWidth="1.5" strokeLinejoin="round" />
+              <path d="M5 8c9 1 18 5 24 12M9 33c6-3 11-4 17-4" fill="none" stroke="#c4c1b8" strokeWidth="1.2" strokeLinecap="round" opacity=".8" />
+              <g transform="translate(29 28)">
+                <g className="dealer-figure__joint-motion dealer-figure__forearm dealer-figure__forearm--stock" key={`stock-forearm-${replayKey}`}>
+                <path d="M1 0c10 2 20 8 27 16l5 9-8 9C16 28 8 23 0 19v-8z" fill="url(#dealer-sleeve)" stroke="#b9b6ad" strokeWidth="1.5" strokeLinejoin="round" />
+                <path d="M23 21l10 4-5 10-10-5z" fill="#d3c8b7" stroke="#a98e70" strokeWidth="1.2" />
+                <path d="M25 24l6 2" stroke="#bd4b43" strokeWidth="1.3" strokeLinecap="round" />
+                <g transform="translate(26 24)">
+                  <g className="dealer-figure__joint-motion dealer-figure__wrist dealer-figure__wrist--stock" key={`stock-wrist-${replayKey}`}>
+                  <path d="M1 3c4-4 10-3 14 0l5 4c2 2 1 5-1 6l-8 1-8-3C0 9-1 6 1 3z" fill="url(#dealer-skin)" stroke="#a86e5d" strokeWidth="1.2" strokeLinejoin="round" />
+                  <g className="dealer-figure__stock-cards">
+                    <rect x="-2" y="-19" width="19" height="25" rx="2" transform="rotate(-11 7 0)" fill="#fbf7e9" stroke="#d3c4a5" strokeWidth="1" />
+                    <rect x="2" y="-21" width="19" height="25" rx="2" transform="rotate(-4 11 -8)" fill="#fbf7e9" stroke="#d3c4a5" strokeWidth="1" />
+                    <rect x="5" y="-22" width="19" height="25" rx="2" transform="rotate(4 14 -9)" fill="url(#dealer-card-back)" stroke="#e1c17a" strokeWidth="1.2" />
+                    <rect x="7" y="-20" width="15" height="21" rx="1.2" transform="rotate(4 14 -9)" fill="none" stroke="#e7d8aa" strokeWidth=".65" />
+                    <path d="M13-14l2 2 2-2-2 6z" fill="#c84b43" transform="rotate(4 14 -9)" />
+                    <circle cx="15" cy="-9" r="1.2" fill="#e7d8aa" />
+                  </g>
+                  <path d="M8 4c2-4 5-7 9-8 2 0 3 2 2 4l-4 6" fill="none" stroke="#f7cfac" strokeWidth="2" strokeLinecap="round" />
+                  </g>
+                </g>
+                </g>
+              </g>
+            </g>
           </g>
 
-          <g
-            className="dealer-figure__arm dealer-figure__arm--right"
-            key={`right-${replayKey}`}
-          >
-            <path d="M249 101c15 1 27 7 35 18l21 34c3 5 2 10-3 13l-8 4c-5 2-9 0-12-5l-20-27c-6-7-14-11-24-14l-8-13z" fill="#f1eee6" stroke="#c7c5bc" strokeWidth="2" strokeLinejoin="round" />
-            <path d="m301 151-17 9 5 9 17-9z" fill="#cbd0c8" stroke="#aeb5ae" strokeWidth="1.5" />
-            <path d="M306 158c3-4 2-8-2-10-3-2-6 0-7 3l-4-4c-2-2-5-1-5 2l2 9c1 4 5 6 9 5z" fill="#e8ad91" stroke="#9f6854" strokeWidth="1.5" strokeLinejoin="round" />
-            <path d="M303 150c2-3 5-4 7-2 2 2 1 5-1 7" fill="none" stroke="#f4c3a4" strokeWidth="2" strokeLinecap="round" />
+          <g transform="translate(198 105)">
+            <g className="dealer-figure__joint-motion dealer-figure__upper dealer-figure__upper--dealing" key={`deal-arm-${replayKey}`}>
+              <path d="M0 1c11 0 23 4 30 13l9 13-8 9c-8-1-17 2-23 8C3 36 1 26 0 16z" fill="url(#dealer-sleeve)" stroke="#b9b6ad" strokeWidth="1.5" strokeLinejoin="round" />
+              <path d="M5 8c9 1 18 5 24 12M9 33c6-3 11-4 17-4" fill="none" stroke="#c4c1b8" strokeWidth="1.2" strokeLinecap="round" opacity=".8" />
+              <g transform="translate(29 28)">
+                <g className="dealer-figure__joint-motion dealer-figure__forearm dealer-figure__forearm--dealing" key={`deal-forearm-${replayKey}`}>
+                <path d="M1 0c10 2 20 8 27 16l5 9-8 9C16 28 8 23 0 19v-8z" fill="url(#dealer-sleeve)" stroke="#b9b6ad" strokeWidth="1.5" strokeLinejoin="round" />
+                <path d="M23 21l10 4-5 10-10-5z" fill="#d3c8b7" stroke="#a98e70" strokeWidth="1.2" />
+                <path d="M25 24l6 2" stroke="#bd4b43" strokeWidth="1.3" strokeLinecap="round" />
+                <g transform="translate(26 24)">
+                  <g className="dealer-figure__joint-motion dealer-figure__wrist dealer-figure__wrist--dealing" key={`deal-wrist-${replayKey}`}>
+                  <path d="M1 3c4-4 10-3 14 0l5 4c2 2 1 5-1 6l-8 1-8-3C0 9-1 6 1 3z" fill="url(#dealer-skin)" stroke="#a86e5d" strokeWidth="1.2" strokeLinejoin="round" />
+                  <g className="dealer-figure__held-card">
+                    <rect x="1" y="-18" width="15" height="21" rx="1.6" transform="rotate(-11 8.5 -7.5)" fill="#fff9ed" stroke="#c9bca2" strokeWidth="1" />
+                    <path d="M5-13l2 2 2-2-2 5z" fill="#bd3540" transform="rotate(-11 8.5 -7.5)" />
+                    <path d="M4-15h3" stroke="#24364a" strokeWidth=".8" strokeLinecap="round" transform="rotate(-11 8.5 -7.5)" />
+                  </g>
+                  <path d="M7 4c3-4 5-7 9-9 2-1 4 1 3 3l-4 7" fill="none" stroke="#f8cfac" strokeWidth="2.1" strokeLinecap="round" />
+                  <circle className="dealer-figure__release-point" cx="11" cy="6" r=".7" fill="transparent" data-motion-shoe />
+                  </g>
+                </g>
+                </g>
+              </g>
+            </g>
           </g>
 
-          <g className="dealer-figure__vest">
-            <path d="M151 103c9-8 20-12 31-12l18 23 18-23c12 0 23 4 32 12l11 97H139z" fill="#20272a" />
-            <path d="m178 99 22 25 22-25-7 24-15 21-15-21z" fill="#faf7ed" />
-            <path d="m181 100 19 21-10 3-11-13-8-8zM219 100l-19 21 10 3 11-13 8-8z" fill="#d9d9d0" />
-            <path d="m192 119 8-5 8 5-2 8 2 10-8 9-8-9 2-10z" fill="#9d2d36" />
-            <path d="m192 119 8 4 8-4-2 8 2 10-8-3-8 3 2-10z" fill="#c63a40" />
-            <path d="M198 121h4v5h-4z" fill="#e7b8a0" />
-            <path d="M178 145 170 196M222 145l8 51" fill="none" stroke="#586064" strokeWidth="2" />
-            <circle cx="184" cy="156" r="2.4" fill="#c4a760" />
-            <circle cx="181" cy="173" r="2.4" fill="#c4a760" />
-            <circle cx="216" cy="156" r="2.4" fill="#c4a760" />
-            <circle cx="219" cy="173" r="2.4" fill="#c4a760" />
-            <path d="M229 143h19v3h-19z" fill="#c4a760" />
-            <path d="M231 140h16v3h-16z" fill="#e3cb8d" />
+          {/* Tailored haori-inspired waistcoat, gold piping, and a restrained red accent. */}
+          <g className="dealer-figure__torso">
+            <path d="M132 100c7-6 14-9 21-10l7 15 7-15c8 1 15 4 22 10l9 99h-82z" fill="url(#dealer-coat)" stroke="#101722" strokeWidth="1.4" strokeLinejoin="round" />
+            <path d="M151 93l9 12-8 15-12-17z" fill="#f5f0e4" stroke="#cfb878" strokeWidth="1" />
+            <path d="M169 93l-9 12 8 15 12-17z" fill="#f5f0e4" stroke="#cfb878" strokeWidth="1" />
+            <path d="M151 101l9 11-6 6-7-9zM169 101l-9 11 6 6 7-9z" fill="#25354a" />
+            <path d="M157 113l3 2 3-2 2 7-5 5-5-5z" fill="#a8303c" />
+            <path d="M156 119h8" stroke="#e2c77f" strokeWidth="1.2" />
+            <path d="M143 126l-7 68M177 126l7 68" fill="none" stroke="#b99b60" strokeWidth="1.2" opacity=".84" />
+            <path d="M160 132v57" stroke="#728093" strokeWidth=".75" opacity=".58" />
+            <circle cx="160" cy="137" r="1.8" fill="#d5b36a" />
+            <circle cx="160" cy="151" r="1.8" fill="#d5b36a" />
+            <circle cx="160" cy="165" r="1.8" fill="#d5b36a" />
+            <path d="M173 124h11v5h-11z" fill="#d1ad67" />
+            <path d="M175 125h7v2h-7z" fill="#f0d89d" />
+            <path d="M140 111c3 3 5 6 7 10M180 111c-3 3-5 6-7 10" fill="none" stroke="#cfb878" strokeWidth=".8" opacity=".72" />
+            <path d="M118 194h84" stroke="#101722" strokeWidth="3" opacity=".55" />
           </g>
 
-          <g className="dealer-figure__head" key={`head-${replayKey}`}>
-            <path d="M159 46c-8 9-11 23-8 36 2 8 8 15 15 18l5-31zM240 43c9 10 12 24 8 38-2 8-8 15-15 19l-5-33z" fill="#352723" />
-            <path d="M173 82h54v29c0 13-11 23-27 23s-27-10-27-23z" fill="#d99678" />
-            <path d="M160 48c0-22 16-37 39-37 25 0 42 16 42 41v25c-7-6-14-14-19-24-10 7-23 11-41 10-7 0-14-2-20-5v-10z" fill="#302522" />
-            <path d="M162 54c0-22 15-37 37-37 20 0 34 11 39 29-8-6-15-13-18-20-8 13-24 22-46 24-4 0-8 2-12 4z" fill="#40302a" />
-            <path d="M164 59c0-17 13-28 31-30-7 9-14 15-27 19l-2 19z" fill="#211f20" />
-            <path d="M167 56c-2 8-3 17 0 26 5 17 17 27 33 27s28-10 33-27c3-10 2-22-1-31-10-2-18-7-24-13-7 8-20 15-41 18z" fill="#f0b99a" />
-            <path d="M154 66c-6-3-9 1-8 7 1 6 5 9 11 9M245 66c6-3 9 1 8 7-1 6-5 9-11 9" fill="#e8a98b" stroke="#a96e59" strokeWidth="2" />
-            <path d="M171 65c5-4 12-5 18-2M212 63c6-3 13-2 18 2" fill="none" stroke="#4b302b" strokeWidth="3" strokeLinecap="round" />
-            <path d="M170 73c5-5 13-5 18 0 1 5-3 10-9 10-6 0-10-4-9-10zM212 73c5-5 13-5 18 0 1 5-3 10-9 10-6 0-10-4-9-10z" fill="#fff8ee" />
-            <ellipse cx="180" cy="77" rx="4.5" ry="6" fill="#342925" />
-            <ellipse cx="221" cy="77" rx="4.5" ry="6" fill="#342925" />
-            <circle cx="181.5" cy="75" r="1.5" fill="#fff" />
-            <circle cx="222.5" cy="75" r="1.5" fill="#fff" />
-            <path d="M200 77c-2 6-4 10-2 12 2 2 5 2 7 1" fill="none" stroke="#c27e67" strokeWidth="2" strokeLinecap="round" />
-            <path d="M192 98c5 3 12 3 17-1" fill="none" stroke="#9c4b48" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M194 98c3 1 7 1 11 0" fill="none" stroke="#fff0df" strokeWidth="1" strokeLinecap="round" />
-            <path d="M164 52c9-4 17-8 23-15M166 59c11-3 20-8 27-16M231 54c-5-4-8-8-10-13" fill="none" stroke="#584038" strokeWidth="2" strokeLinecap="round" opacity=".76" />
+          {/* Head, with a calm expression and a sweeping dark bob. */}
+          <g className="dealer-figure__head">
+            <path d="M143 76c-7-7-11-18-11-31 0-23 13-39 32-40 23-1 37 16 36 42-1 19-6 34-17 43l-8-19z" fill="url(#dealer-hair)" />
+            <path d="M147 76h26v24c-7 5-18 5-26 0z" fill="url(#dealer-skin)" />
+            <path d="M136 35c0-18 11-30 27-30 17 0 28 12 28 31v13c0 22-12 36-28 36s-28-14-28-36V35z" fill="url(#dealer-skin)" />
+            <path d="M135 41c-5-3-8 0-7 6 1 5 4 8 9 8M192 41c5-3 8 0 7 6-1 5-4 8-9 8" fill="url(#dealer-skin)" stroke="#bd8068" strokeWidth="1.3" />
+            <circle cx="132" cy="55" r="2.2" fill="#d5b36d" />
+            <circle cx="195" cy="55" r="2.2" fill="#d5b36d" />
+            <path d="M143 48c4-3 9-3 13-1M164 47c4-2 9-2 13 1" fill="none" stroke="#49302a" strokeWidth="1.8" strokeLinecap="round" />
+            <g className="dealer-figure__eyes">
+              <path d="M143 54c3-4 9-4 13 0-1 5-4 7-7 7-3 0-5-2-6-7zM164 54c3-4 9-4 13 0-1 5-4 7-7 7-3 0-5-2-6-7z" fill="#fffaf1" />
+              <ellipse cx="151" cy="56" rx="2.6" ry="3.2" fill="#352923" />
+              <ellipse cx="172" cy="56" rx="2.6" ry="3.2" fill="#352923" />
+              <circle cx="152" cy="55" r=".8" fill="#fff" />
+              <circle cx="173" cy="55" r=".8" fill="#fff" />
+            </g>
+            <path d="M160 55c-1 5-3 9-2 11 1 1 3 1 4 0" fill="none" stroke="#bc7b65" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M154 72c4 3 9 3 13 0" fill="none" stroke="#984d4b" strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M156 73c3 1 6 1 9 0" stroke="#fff0dd" strokeWidth=".75" strokeLinecap="round" />
+            <path d="M133 41c3-20 15-30 31-30 15 0 24 8 27 22-8-3-15-10-18-17-7 13-20 20-39 22l-1 16c-5-7-7-16-6-23z" fill="url(#dealer-hair)" />
+            <path d="M137 33c8-15 21-20 34-17M139 39c10-5 17-11 21-18M180 18c5 4 8 8 10 14" fill="none" stroke="#604840" strokeWidth="1.4" strokeLinecap="round" opacity=".78" />
+            <path d="M137 79c5 9 13 14 23 15 11 0 19-6 24-17" fill="none" stroke="#332523" strokeWidth="4" strokeLinecap="round" />
           </g>
         </svg>
-
-        <span className="dealer-figure__shoe-anchor" data-motion-shoe />
       </div>
     </div>
   )

@@ -18,17 +18,15 @@ export interface BlackjackTableProps {
 }
 
 const MIN_BET = 10
-const MAX_BET = 500
 const BET_STEP = 10
-const CHIP_VALUES = [10, 50, 100]
+const CHIP_VALUES = [10, 50, 100, 500]
 const numberFormat = new Intl.NumberFormat('en-US')
 
 const formatChips = (amount: number) => `${numberFormat.format(amount)} chips`
 
-function HandScore({ cards, houseRuleWin = false }: { cards: Card[]; houseRuleWin?: boolean }) {
+function HandScore({ cards }: { cards: Card[] }) {
   if (cards.length === 0) return <span className="bj-score bj-score--pending">—</span>
   const score = scoreHand(cards)
-  if (score.busted && houseRuleWin) return <span className="bj-score">House-rule win · <span className="bj-score-value">{score.total}</span></span>
   if (score.busted) return <span className="bj-score bj-score--bust">Bust · <span className="bj-score-value">{score.total}</span></span>
   return (
     <span className="bj-score">
@@ -57,7 +55,6 @@ function PlayerHandView({
   active,
   speed,
   presentation,
-  playerFiveCardSideWin,
 }: {
   hand: PlayerHand
   handIndex: number
@@ -65,7 +62,6 @@ function PlayerHandView({
   active: boolean
   speed: BlackjackTableProps['speed']
   presentation?: CardPresentation | null
-  playerFiveCardSideWin: boolean
 }) {
   const visibleCards = hand.cards.slice(0, presentation?.playerVisibleCardCounts[hand.id] ?? hand.cards.length)
   const resultsVisible = !presentation?.busy || presentation.resultsVisible
@@ -83,7 +79,7 @@ function PlayerHandView({
         <HandStatus hand={hand} active={active && !presentation?.busy} resultsVisible={resultsVisible} />
       </header>
       <div className="bj-hand-detail">
-        <HandScore cards={visibleCards} houseRuleWin={resultsVisible && playerFiveCardSideWin && hand.outcome === 'win'} />
+        <HandScore cards={visibleCards} />
         <span className="bj-hand-bet">Bet {formatChips(hand.bet)}</span>
       </div>
       <div className="bj-cards-lane" aria-label={`${visibleCards.length} cards`}>
@@ -131,8 +127,8 @@ export function BlackjackTable({
     if (can(action.type)) onAction(action)
   }
   const setBet = (amount: number) => {
-    // These bounds mirror the visible house rules; the engine remains authoritative.
-    const maximum = Math.min(MAX_BET, Math.floor(state.bankroll / BET_STEP) * BET_STEP)
+    // The engine remains authoritative; this only clamps the visible control.
+    const maximum = Math.floor(state.bankroll / BET_STEP) * BET_STEP
     if (!can('SET_BET') || maximum < MIN_BET) return
     const snapped = Math.round(amount / BET_STEP) * BET_STEP
     const validAmount = Math.max(MIN_BET, Math.min(maximum, snapped))
@@ -166,9 +162,7 @@ export function BlackjackTable({
   const dealerVisibleCards = dealerHoleHidden ? dealerCards.slice(0, 1) : dealerCards
   const dealerScore = dealerVisibleCards.length > 0 ? scoreHand(dealerVisibleCards) : null
   const dealerFiveCardWin = state.phase === 'settled' && !presentation?.busy
-    && dealerVisibleCards.length >= 5 && state.hands.every((hand) => hand.outcome === 'loss')
-  const playerFiveCardSideWin = state.phase === 'settled'
-    && state.hands.some((hand) => hand.cards.length >= 5 && hand.outcome === 'win')
+    && dealerVisibleCards.length >= 5 && !dealerScore?.busted && state.hands.every((hand) => hand.outcome === 'loss')
   const activeIndex = state.activeHandIndex
   const statePhaseLabel = state.phase === 'betting'
     ? 'Place your bet'
@@ -204,7 +198,7 @@ export function BlackjackTable({
     : can('NEXT_ROUND')
       ? { label: 'Next hand', type: 'NEXT_ROUND' as const }
       : null
-  const maxBet = Math.min(MAX_BET, Math.floor(state.bankroll / BET_STEP) * BET_STEP)
+  const maxBet = Math.floor(state.bankroll / BET_STEP) * BET_STEP
   const canBet = can('SET_BET') && maxBet >= MIN_BET
   const committedBet = state.hands.reduce((total, hand) => total + hand.bet, 0)
 
@@ -307,7 +301,7 @@ export function BlackjackTable({
                         <span className="bj-zone-kicker">Wager</span>
                         <h2>Choose your bet</h2>
                       </div>
-                      <span className="bj-bet-limit">10–500 chips · steps of 10</span>
+                      <span className="bj-bet-limit">Max {formatChips(maxBet)} · steps of 10</span>
                     </div>
                     <div className="bj-bet-selector">
                       <button
@@ -415,7 +409,6 @@ export function BlackjackTable({
                       active={activeIndex === index && state.phase === 'player' && !presentation?.busy}
                       speed={speed}
                       presentation={presentation}
-                      playerFiveCardSideWin={playerFiveCardSideWin}
                     />
                   ))}
                 </div>
@@ -430,8 +423,8 @@ export function BlackjackTable({
             <ul>
               <li>Six decks; dealer stands on every 17, including soft 17.</li>
               <li>A natural blackjack pays 3:2; a tie pushes.</li>
-              <li>House rule: the first side to reach five cards wins the round, even if the fifth card busts. A split hand counts for the player side.</li>
-              <li>Bet 10–500 virtual chips in increments of 10.</li>
+              <li>House rule: a hand that reaches five cards at 21 or below wins the round. A fifth-card bust loses. A split hand counts for the player side.</li>
+              <li>Bet from 10 virtual chips up to your bankroll in increments of 10.</li>
               <li>Double on the first two cards: take one card, then stand.</li>
               <li>Split one matching-rank pair once; split aces receive one card each and stand.</li>
               <li>Insurance and surrender are not available.</li>

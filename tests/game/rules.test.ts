@@ -138,13 +138,14 @@ describe('five-card side rule', () => {
     expect(fifthCard.state.hands[0]).toMatchObject({ outcome: 'win', payout: 200, status: 'settled' })
     expect(fifthCard.state.dealerCards).toHaveLength(2)
     expect(fifthCard.state.dealerHoleHidden).toBe(true)
+    expect(fifthCard.state.message).toBe('You reached five cards without busting and win the round.')
     expect(fifthCard.state.bankroll).toBe(1_100)
     expect(fifthCard.events.some((event) => event.type === 'hole-revealed')).toBe(false)
     expect(fifthCard.events.at(-2)).toMatchObject({ type: 'hand-settled', outcome: 'win' })
     expect(fifthCard.events.at(-1)).toEqual({ type: 'round-ended' })
   })
 
-  it('lets the player side win when the fifth card itself busts', () => {
+  it('settles a player fifth-card bust as a loss for the player side', () => {
     const state = createGame({
       shoe: fixedShoe(
         card('6'), card('6'), card('6'), card('10'),
@@ -157,15 +158,30 @@ describe('five-card side rule', () => {
     const fifthCard = applyAction(secondHit.state, { type: 'HIT' })
 
     expect(scoreHand(fifthCard.state.hands[0].cards).busted).toBe(true)
-    expect(fifthCard.state.hands[0]).toMatchObject({ outcome: 'win', payout: 200, status: 'settled' })
-    expect(fifthCard.state.bankroll).toBe(1_100)
+    expect(fifthCard.state.hands[0]).toMatchObject({ outcome: 'loss', payout: 0, status: 'settled' })
+    expect(fifthCard.state.message).toBe('You busted on your fifth card. The dealer wins the round.')
+    expect(fifthCard.state.bankroll).toBe(900)
     expect(fifthCard.state.dealerHoleHidden).toBe(true)
   })
 
   it.each([
-    { fifthCard: card('2'), dealerBusted: false, dealerTotal: 18 },
-    { fifthCard: card('K'), dealerBusted: true, dealerTotal: 26 },
-  ])('lets the dealer side win on its fifth card (busted: $dealerBusted)', ({ fifthCard, dealerBusted, dealerTotal }) => {
+    {
+      fifthCard: card('2'),
+      dealerBusted: false,
+      dealerTotal: 18,
+      outcome: 'loss',
+      bankroll: 900,
+      message: 'The dealer reached five cards without busting and wins the round.',
+    },
+    {
+      fifthCard: card('K'),
+      dealerBusted: true,
+      dealerTotal: 26,
+      outcome: 'win',
+      bankroll: 1_100,
+      message: 'The dealer busted on its fifth card. You win the round.',
+    },
+  ] as const)('resolves the dealer fifth card by its total (busted: $dealerBusted)', ({ fifthCard, dealerBusted, dealerTotal, outcome, bankroll, message }) => {
     const state = createGame({
       shoe: fixedShoe(
         card('10'), card('10'), card('4'), card('2'),
@@ -177,11 +193,12 @@ describe('five-card side rule', () => {
     const transition = applyAction(hit.state, { type: 'STAND' })
 
     expect(transition.state.phase).toBe('settled')
-    expect(transition.state.hands[0]).toMatchObject({ outcome: 'loss', payout: 0 })
+    expect(transition.state.hands[0]).toMatchObject({ outcome, payout: outcome === 'win' ? 200 : 0 })
     expect(transition.state.dealerCards).toHaveLength(5)
     expect(scoreHand(transition.state.dealerCards)).toMatchObject({ busted: dealerBusted, total: dealerTotal })
-    expect(transition.state.bankroll).toBe(900)
-    expect(transition.events.at(-2)).toMatchObject({ type: 'hand-settled', outcome: 'loss' })
+    expect(transition.state.message).toBe(message)
+    expect(transition.state.bankroll).toBe(bankroll)
+    expect(transition.events.at(-2)).toMatchObject({ type: 'hand-settled', outcome })
     expect(transition.events.at(-1)).toEqual({ type: 'round-ended' })
   })
 
@@ -203,7 +220,7 @@ describe('five-card side rule', () => {
     expect(scoreHand(transition.state.dealerCards).total).toBe(17)
   })
 
-  it('treats a split player hand reaching five cards as a win for the player side', () => {
+  it('settles every split hand as a win when one player hand reaches five without busting', () => {
     const state = createGame({
       shoe: fixedShoe(
         card('8'), card('6'), card('8'), card('10'),
@@ -222,6 +239,29 @@ describe('five-card side rule', () => {
     expect(playerFiveCards.state.hands.map((hand) => hand.outcome)).toEqual(['win', 'win'])
     expect(playerFiveCards.state.hands.map((hand) => hand.payout)).toEqual([200, 200])
     expect(playerFiveCards.state.bankroll).toBe(1_200)
+    expect(playerFiveCards.state.dealerHoleHidden).toBe(true)
+  })
+
+  it('settles every split hand as a loss when one player fifth card busts', () => {
+    const state = createGame({
+      shoe: fixedShoe(
+        card('8'), card('6'), card('8'), card('10'),
+        card('10'), card('3'), card('9'), card('2'), card('2'), card('9'),
+      ),
+    })
+    const dealt = applyAction(state, { type: 'DEAL' })
+    const split = applyAction(dealt.state, { type: 'SPLIT' })
+    const firstHandBust = applyAction(split.state, { type: 'HIT' })
+    const secondHandFirstHit = applyAction(firstHandBust.state, { type: 'HIT' })
+    const secondHandSecondHit = applyAction(secondHandFirstHit.state, { type: 'HIT' })
+    const playerFiveCards = applyAction(secondHandSecondHit.state, { type: 'HIT' })
+
+    expect(playerFiveCards.state.phase).toBe('settled')
+    expect(playerFiveCards.state.hands.map((hand) => hand.cards.length)).toEqual([3, 5])
+    expect(scoreHand(playerFiveCards.state.hands[1].cards).busted).toBe(true)
+    expect(playerFiveCards.state.hands.map((hand) => hand.outcome)).toEqual(['loss', 'loss'])
+    expect(playerFiveCards.state.hands.map((hand) => hand.payout)).toEqual([0, 0])
+    expect(playerFiveCards.state.bankroll).toBe(800)
     expect(playerFiveCards.state.dealerHoleHidden).toBe(true)
   })
 })

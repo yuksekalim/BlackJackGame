@@ -17,7 +17,7 @@ function fixedShoe(...prefix: Card[]): Card[] {
 }
 
 describe('betting actions', () => {
-  it('accepts only affordable bets from 10 to 500 in increments of 10', () => {
+  it('accepts affordable bets in increments of 10 without a fixed maximum', () => {
     const state = createGame({ initialBankroll: 100, shoe: fixedShoe() })
     for (const amount of [0, 9, 11, 105, 110, 510]) {
       const transition = applyAction(state, { type: 'SET_BET', amount })
@@ -28,6 +28,24 @@ describe('betting actions', () => {
     const valid = applyAction(state, { type: 'SET_BET', amount: 90 })
     expect(valid.state.selectedBet).toBe(90)
     expect(valid.events).toEqual([])
+  })
+
+  it('allows a bet above 500 when the bankroll can cover it', () => {
+    const state = createGame({
+      initialBankroll: 2_000,
+      shoe: fixedShoe(card('8'), card('6'), card('9'), card('10')),
+    })
+    const selected = applyAction(state, { type: 'SET_BET', amount: 1_000 })
+
+    expect(selected.state.selectedBet).toBe(1_000)
+    const deal = applyAction(selected.state, { type: 'DEAL' })
+    expect(deal.state.phase).toBe('player')
+    expect(deal.state.bankroll).toBe(1_000)
+    expect(deal.events).toContainEqual({
+      type: 'bet-placed',
+      amount: 1_000,
+      handId: 'round-1-hand-1',
+    })
   })
 
   it('returns the identical state for actions that are not legal in the current phase', () => {

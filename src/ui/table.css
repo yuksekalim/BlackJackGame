@@ -249,7 +249,7 @@
 .bj-table-content .bj-table-cards { padding-bottom:0; }
 .bj-table-content .bj-zone-heading { margin-bottom:.25rem; }
 
-@media (min-width:1100px) and (min-height:760px) {
+@media (min-width:1100px) and (min-height:700px) {
   .bj-app { height:100svh; padding:clamp(.45rem,1svh,.8rem) clamp(.9rem,2vw,2rem); }
   .bj-frame { display:grid; grid-template-rows:auto auto minmax(0,1fr) auto; height:100%; }
   .bj-header { margin-bottom:.3rem; }
@@ -293,7 +293,7 @@
   .bj-table-content .dealer-figure-stage { height:clamp(125px,38vw,160px); }
 }
 
-@media (min-width:1100px) and (min-height:760px) and (max-height:850px) {
+@media (min-width:1100px) and (min-height:700px) and (max-height:850px) {
   .bj-table-content { grid-template-rows:minmax(0,.75fr) auto minmax(0,1.25fr); }
   .bj-dealer-area {
     display:grid;
@@ -362,4 +362,34 @@
   .bj-table-content .bj-cards-lane { padding-bottom:0; }
   .bj-rules { margin-top:.35rem; }
   .bj-rules summary { padding:.35rem .7rem; }
+}
+
+/* Give player cards more presence inside the existing table height. */
+.bj-chip--500 { color:#fff7e9; background:#69457e; }
+
+@media (min-width:1100px) and (min-height:700px) {
+  .bj-table-content .bj-hand .bj-card-slot { width:clamp(4.6rem,10.5svh,6.5rem); }
+}
+
+@media (min-width:760px) and (max-width:1099px) {
+  .bj-table-content .bj-hand .bj-card-slot { width:clamp(5rem,10vw,5.7rem); }
+}
+
+@media (min-width:900px) and (max-width:1099px) and (min-height:700px) and (max-height:850px) {
+  .bj-table-middle .bj-action-panel { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.25rem .4rem; }
+  .bj-table-middle .bj-actions-grid { grid-column:1; grid-row:2; width:auto; gap:.2rem; }
+  .bj-table-middle .bj-action-button { gap:.18rem; padding:.3rem .2rem; font-size:.72rem; }
+  .bj-table-middle .bj-round-actions { grid-column:2; grid-row:2; align-self:center; width:auto; gap:.2rem; }
+  .bj-table-middle .bj-round-button { padding:.45rem .45rem; font-size:.7rem; }
+  .bj-table-middle .bj-reset-button { padding:.45rem .4rem; font-size:.68rem; }
+  .bj-table-content .bj-hand .bj-card-slot { width:clamp(4.1rem,9.5svh,5.1rem); }
+}
+
+@media (max-width:720px) {
+  .bj-table-content { gap:.4rem; }
+  .bj-table-content .bj-hand .bj-card-slot { width:clamp(4.7rem,19vw,5.65rem); }
+}
+
+@media (min-width:1100px) and (min-height:700px) and (max-height:759px) {
+  .bj-table-content .bj-hand { padding-bottom:.15rem; }
 }
