@@ -31,6 +31,7 @@ States: `ready`, `blocked`, `in progress`, `review`, `done`. Dora updates owners
 | T-24 | B-06 | GPT-6 Sol high animation agent + Dora | review | Original Higgsfield image rebuilt as complete-pose Remotion deal, reveal, and win/loss sequences. All 42 frames of each sequence inspected at source scale; live normal/fast/instant deals, both outcomes, and New game interruption checked; 36 tests, build, lint, and diff check pass. Alim's motion review remains open. |
 | T-25 | B-06 | GPT-6 Sol high animation agent + Dora | done | Alim approved `prototype/hyperframes/`. Complete-pose deal, player-win, and player-loss showcase rendered to an 8.4-second 1920×1080, 60-fps high-quality MP4. Full HyperFrames check passed with 0 runtime/layout/motion/contrast errors and 29/29 text contrast checks; four non-gating lint warnings are documented. Independent QA inspected the corrected 60-fps render at both scene transitions and confirmed intact figures with no ghosted limbs. |
 | T-26 | — | Dora | done | Pushed `codex/blackjack-mvp`, including the six earlier commits and deployment documentation. Published only the 33-file Vite build in public `yuksekalim/BlackJackGame-Pages` and enabled Pages from `main` / root. The live game URL loads; all emitted files, including each SVG card asset and 15 dealer sprites, returned HTTP 200; browser smoke reached player turn and displayed the cards and dealer. |
+| T-27 | — | Dora | in progress | Move Pages publishing to the now-public source repo; verify the `/BlackJackGame/` URL and its static assets. |
 
 ## Handoff Format
 

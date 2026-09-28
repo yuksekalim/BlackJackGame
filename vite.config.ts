@@ -5,5 +5,5 @@ import { defineConfig } from 'vite'
 export default defineConfig(({ command }) => ({
   plugins: [react()],
   // Keep local dev rooted while publishing the build under its Pages path.
-  base: command === 'build' ? '/BlackJackGame-Pages/' : '/',
+  base: command === 'build' ? '/BlackJackGame/' : '/',
 }))

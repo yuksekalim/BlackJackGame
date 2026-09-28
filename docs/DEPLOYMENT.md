@@ -1,25 +1,19 @@
 # Deployment
 
-The source repository stays private. The built browser game is published to the separate public repository [`yuksekalim/BlackJackGame-Pages`](https://github.com/yuksekalim/BlackJackGame-Pages) at <https://yuksekalim.github.io/BlackJackGame-Pages/>. Only the generated contents of `dist/` belong in that public repository; do not copy the source tree, project documents, or Git history there.
+## Live site
 
-The Vite base path is `/BlackJackGame-Pages/`, which makes bundled card artwork load from the project page. `src/main.tsx` gives Remotion's `staticFile()` the same base so the dealer sprites also load correctly.
+The game is published at <https://yuksekalim.github.io/BlackJackGame/> from the public source repository [`yuksekalim/BlackJackGame`](https://github.com/yuksekalim/BlackJackGame).
 
-Clone the Pages repository once alongside this private checkout:
+## Automatic deployment
 
-```sh
-git clone git@github.com:yuksekalim/BlackJackGame-Pages.git ../BlackJackGame-Pages
-```
+The GitHub Actions workflow at `.github/workflows/pages.yml` builds the app and deploys `dist/` to GitHub Pages when changes reach `codex/blackjack-mvp`.
 
-To publish a later update, run from the source checkout:
+The Vite production base path is `/BlackJackGame/`. `src/main.tsx` applies the same base to Remotion `staticFile()` URLs, so bundled card SVGs and dealer sprites resolve beneath the project URL.
 
-```sh
-npm run build
-git -C ../BlackJackGame-Pages pull --ff-only
-rsync -a --delete --exclude='.git' dist/ ../BlackJackGame-Pages/
-touch ../BlackJackGame-Pages/.nojekyll
-git -C ../BlackJackGame-Pages add --all
-git -C ../BlackJackGame-Pages commit -m "Deploy Blackjack site"
-git -C ../BlackJackGame-Pages push
-```
+## One-time GitHub Pages setup
 
-The Pages repository's `main` branch, root folder is the publishing source. Give deployment a short time to finish after pushing; the site URL stays the same.
+In the repository, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. After that, pushes to `codex/blackjack-mvp` publish the latest game automatically.
+
+## Verify a deployment
+
+Open the Actions tab and confirm the **Deploy to GitHub Pages** run succeeds. Then open the live URL and check that the first hand displays the card faces and dealer artwork.
