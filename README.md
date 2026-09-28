@@ -43,3 +43,7 @@ npm run lint
 ```
 
 The local preview runs at `http://localhost:5173/` by default. The app is playable on the `codex/blackjack-mvp` branch. Betting, actions, and round results sit on the felt between the dealer and player hands. The desktop table is sized to keep the bankroll, cards, controls, and result together on screen; narrow phones use a vertical layout. All 36 automated rule, presentation, and result tests, the production build, and lint pass. Browser checks covered 1710×952, 1366×768, 1280×720, 1024×768, 900×700, and 800×900 desktop sizes plus 320×700 mobile, including live deal and settlement. The rebuilt dealer was checked in rendered frame sheets and in live normal, fast, and instant play, win and loss outcomes, and an interrupted New game. An [isolated HyperFrames dealer showcase](prototype/hyperframes/README.md) now demonstrates the deal plus distinct player-win and player-loss reactions using the same complete-figure poses; the live game still uses Remotion. Full end-to-end outcome coverage is tracked in [Tasks](TASKS.md).
+
+## Published Game
+
+Play the game at [yuksekalim.github.io/BlackJackGame-Pages](https://yuksekalim.github.io/BlackJackGame-Pages/). The source repository remains private; the separate [public Pages repository](https://github.com/yuksekalim/BlackJackGame-Pages) contains only the generated static site. See [Deployment](docs/DEPLOYMENT.md) for how to publish later updates.
