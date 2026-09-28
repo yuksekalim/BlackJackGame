@@ -18,7 +18,8 @@ git worktree add --detach ../blackjack-pages origin/gh-pages
 # For each update, run from the source checkout.
 npm ci
 npm run build
-git -C ../blackjack-pages pull --ff-only origin gh-pages
+git -C ../blackjack-pages fetch origin gh-pages
+git -C ../blackjack-pages reset --hard origin/gh-pages
 rsync -a --delete --exclude='.git' dist/ ../blackjack-pages/
 touch ../blackjack-pages/.nojekyll
 git -C ../blackjack-pages add --all
