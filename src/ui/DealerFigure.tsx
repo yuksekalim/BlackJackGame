@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Player } from '@remotion/player'
-import { DealerMotion } from '../remotion/DealerMotion'
+import { staticFile } from 'remotion'
+import { DealerMotion, DEALER_HEIGHT, DEALER_WIDTH, GESTURE_FRAMES } from '../remotion/DealerMotion'
 import './dealer-figure.css'
 
 export type DealerGesture = 'idle' | 'deal-player' | 'deal-dealer' | 'reveal' | 'win' | 'loss'
@@ -46,6 +47,13 @@ export function DealerFigure({
     return () => query.removeListener(update)
   }, [])
 
+  useEffect(() => {
+    for (const name of ['dealer-idle.png', 'dealer-deal-near.png', 'dealer-deal-early.png', 'dealer-deal-between.png', 'dealer-deal-mid.png', 'dealer-deal-late.png', 'dealer-deal.png', 'dealer-player-win-near.png', 'dealer-player-win-middle.png', 'dealer-player-win-between.png', 'dealer-player-win-late.png', 'dealer-player-win.png', 'dealer-player-loss-near.png', 'dealer-player-loss-middle.png', 'dealer-player-loss.png']) {
+      const image = new Image()
+      image.src = staticFile(`dealer/${name}`)
+    }
+  }, [])
+
   return (
     <div
       className={`dealer-figure-stage${className ? ` ${className}` : ''}`}
@@ -57,13 +65,14 @@ export function DealerFigure({
         <Player
           key={`${motionKey ?? gesture}-${gesture}-${speed === 'instant'}-${reducedMotion}`}
           component={DealerMotion}
-          inputProps={{ gesture }}
-          compositionWidth={1391}
-          compositionHeight={1230}
+          inputProps={{ gesture, frozen: speed === 'instant' || reducedMotion }}
+          compositionWidth={DEALER_WIDTH}
+          compositionHeight={DEALER_HEIGHT}
           fps={60}
-          durationInFrames={gesture === 'idle' ? 210 : 36}
+          durationInFrames={gesture === 'idle' ? 210 : GESTURE_FRAMES}
           autoPlay={speed !== 'instant' && !reducedMotion}
           loop={gesture === 'idle'}
+          moveToBeginningWhenEnded={false}
           playbackRate={speed === 'fast' ? 2 : 1}
           initiallyMuted
           style={{ width: '100%', height: '100%', overflow: 'visible' }}

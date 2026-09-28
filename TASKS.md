@@ -27,6 +27,9 @@ States: `ready`, `blocked`, `in progress`, `review`, `done`. Dora updates owners
 | T-20 | B-05 / B-06 | Dora | done | Higgsfield dealer cutout and shoulder layers integrated; cards launch from moving hand; desktop/mobile, normal/fast/instant, reduced-motion CSS, and interrupted New game checked |
 | T-21 | B-05 | Deck and UI agent + Dora | done | 10/50/100/500 choice changes both + and −; browser verified selection, increment/decrement, bankroll/minimum clamps, and 320px fit |
 | T-22 | B-06 | Motion agent + Dora | done | Remotion Player uses cleaned seven-layer dealer rig with frame-driven shoulder/elbow deal and reveal gestures; Studio and live normal/fast/instant, interrupted New game, hand-sourced card flight, build, lint, and 36 tests checked |
+| T-23 | B-06 | Dealer asset + motion agents + Dora | superseded | Partial cutout repair was rejected in favor of a full animation restart from the original Higgsfield source; do not ship its three-layer rig |
+| T-24 | B-06 | GPT-6 Sol high animation agent + Dora | review | Original Higgsfield image rebuilt as complete-pose Remotion deal, reveal, and win/loss sequences. All 42 frames of each sequence inspected at source scale; live normal/fast/instant deals, both outcomes, and New game interruption checked; 36 tests, build, lint, and diff check pass. Alim's motion review remains open. |
+| T-25 | B-06 | GPT-6 Sol high animation agent + Dora | blocked | HyperFrames prototype scaffold was rejected by automatic approval review because it adds a permanent project structure. Await explicit approval for `prototype/hyperframes/`, then implement and validate the requested HyperFrames composition. |
 
 ## Handoff Format
 

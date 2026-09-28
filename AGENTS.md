@@ -16,7 +16,7 @@ Build a responsive, single-player blackjack game with correct rules, a distincti
 | Motion agent | Deal, flip, chip, and result animations; reduced motion and interruption behavior | `src/motion/`, motion-specific tests |
 | QA agent | Independent rules, interaction, visual, and accessibility review after integration | Test reports; fixes only after coordination |
 
-The paths are planned boundaries; the main agent may adjust them when the application is scaffolded. An agent must not edit another agent's area or a shared contract without coordinating with Dora. All subagents requested for this project use GPT-6 Luna at max effort. Run no more than three specialists alongside Dora; QA follows the build phase.
+The paths are planned boundaries; the main agent may adjust them when the application is scaffolded. An agent must not edit another agent's area or a shared contract without coordinating with Dora. Subagents normally use GPT-6 Luna at max effort. For the dealer animation rebuild, Alim explicitly chose GPT-6 Sol at high effort. Run no more than three specialists alongside Dora; QA follows the build phase.
 
 ## Working Contract
 

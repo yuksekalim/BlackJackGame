@@ -1,7 +1,7 @@
 import { Composition } from 'remotion'
-import { DealerMotion } from './DealerMotion'
+import { DealerMotion, DEALER_HEIGHT, DEALER_WIDTH, GESTURE_FRAMES } from './DealerMotion'
 
-const motionCanvas = { width: 1391, height: 1230, fps: 60, durationInFrames: 36 }
+const motionCanvas = { width: DEALER_WIDTH, height: DEALER_HEIGHT, fps: 60, durationInFrames: GESTURE_FRAMES }
 
 export function RemotionRoot() {
   return (
@@ -17,6 +17,18 @@ export function RemotionRoot() {
         component={DealerMotion}
         {...motionCanvas}
         defaultProps={{ gesture: 'deal-dealer' as const }}
+      />
+      <Composition
+        id="PlayerWins"
+        component={DealerMotion}
+        {...motionCanvas}
+        defaultProps={{ gesture: 'win' as const }}
+      />
+      <Composition
+        id="PlayerLoses"
+        component={DealerMotion}
+        {...motionCanvas}
+        defaultProps={{ gesture: 'loss' as const }}
       />
       <Composition
         id="Reveal"

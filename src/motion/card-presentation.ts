@@ -195,8 +195,8 @@ export function canAdvanceCardSequence(expectedSequenceId: number, activeSequenc
 }
 
 function getEventDuration(event: SequenceRun['activeEvent'], speed: MotionSpeed): number {
-  if (speed === 'fast') return event?.type === 'hole-revealed' ? 180 : 250
-  return event?.type === 'hole-revealed' ? 390 : 510
+  if (speed === 'fast') return event?.type === 'hole-revealed' ? 180 : 340
+  return event?.type === 'hole-revealed' ? 390 : 680
 }
 
 function getEventCopy(event: SequenceRun['activeEvent']): { message: string; phaseLabel: string } {

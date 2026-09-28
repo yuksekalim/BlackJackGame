@@ -201,7 +201,7 @@ export function AnimatedCard({
       }
       const keyframes = continuedFrom ? [from, to] : [from, middle, landing, to]
       const animation = wrapper.animate(keyframes, {
-        duration: speed === 'fast' ? 250 : 510,
+        duration: speed === 'fast' ? 180 : 360,
         easing: 'cubic-bezier(0.16, 0.76, 0.22, 1)',
         fill: 'both',
       })
@@ -218,7 +218,7 @@ export function AnimatedCard({
     // Give the articulated hand a short windup, then measure its live release
     // point. The brief hidden interval prevents a flash at the landing slot.
     wrapper.style.opacity = '0'
-    dealStartTimerRef.current = window.setTimeout(startDeal, speed === 'fast' ? 24 : 48)
+    dealStartTimerRef.current = window.setTimeout(startDeal, speed === 'fast' ? 155 : 310)
   }, [identity, speed, prefersReducedMotion, animateOnMount, entranceKey])
 
   useSafeLayoutEffect(() => {
