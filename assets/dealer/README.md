@@ -11,3 +11,5 @@ Every frame uses one complete figure sprite. This avoids split joints, detached 
 ## Review clips
 
 The 60-fps, 42-frame preview clips are [`deal.mp4`](previews/deal.mp4), [`player-win.mp4`](previews/player-win.mp4), and [`player-loss.mp4`](previews/player-loss.mp4). They show the dealer without the table; the live game uses the same Remotion compositions over the existing felt.
+
+A separate [HyperFrames motion showcase](../../prototype/hyperframes/README.md) uses these same complete figure poses for a deal and distinct player-win/player-loss reactions. Its [rendered review clip](../../prototype/hyperframes/renders/dealer-gestures.mp4) does not replace the Remotion-powered live game.
