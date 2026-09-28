@@ -30,6 +30,15 @@ const art: Record<string, string> = {
   playerLoss: 'dealer-player-loss.png',
 }
 
+const gestureCels: Record<DealerGesture, (keyof typeof art)[]> = {
+  idle: ['idle'],
+  'deal-player': ['idle', 'near', 'early', 'between', 'mid', 'late', 'extended'],
+  'deal-dealer': ['idle', 'near', 'early', 'between', 'mid', 'late', 'extended'],
+  reveal: ['idle', 'near', 'early'],
+  win: ['idle', 'playerWinNear', 'playerWinMiddle', 'playerWinBetween', 'playerWinLate', 'playerWin'],
+  loss: ['idle', 'playerLossNear', 'playerLossMiddle', 'playerLoss'],
+}
+
 const releasePoints: Record<string, [number, number]> = {
   idle: [158, 589],
   near: [203, 634],
@@ -107,12 +116,19 @@ export function DealerMotion({ gesture, frozen = false }: DealerMotionProps) {
         transformOrigin: '680px 640px',
         filter: `drop-shadow(0 29px 23px rgba(5, 18, 18, .22)) blur(${smear}px)`,
       }}>
-        <Img
-          src={staticFile(`dealer/${art[cel]}`)}
-          style={{ position: 'absolute', inset: 0, width: DEALER_WIDTH, height: DEALER_HEIGHT, objectFit: 'fill' }}
-          draggable={false}
-          from={-16}
-        />
+        {/* Keep each pose's src fixed so Remotion cannot interrupt an in-flight image decode. */}
+        {(frozen ? [cel] : gestureCels[gesture]).map((pose) => (
+          <Img
+            key={pose}
+            src={staticFile(`dealer/${art[pose]}`)}
+            style={{
+              position: 'absolute', inset: 0, width: DEALER_WIDTH, height: DEALER_HEIGHT,
+              objectFit: 'fill', display: pose === cel ? 'block' : 'none',
+            }}
+            draggable={false}
+            from={-16}
+          />
+        ))}
         <div
           data-motion-shoe
           style={{ position: 'absolute', left: handX, top: handY, width: 2, height: 2, opacity: 0 }}
