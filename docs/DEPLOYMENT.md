@@ -4,11 +4,17 @@ The source repository stays private. The built browser game is published to the 
 
 The Vite base path is `/BlackJackGame-Pages/`, which makes bundled card artwork load from the project page. `src/main.tsx` gives Remotion's `staticFile()` the same base so the dealer sprites also load correctly.
 
-To publish a later update from this private checkout:
+Clone the Pages repository once alongside this private checkout:
+
+```sh
+git clone git@github.com:yuksekalim/BlackJackGame-Pages.git ../BlackJackGame-Pages
+```
+
+To publish a later update, run from the source checkout:
 
 ```sh
 npm run build
-git clone git@github.com:yuksekalim/BlackJackGame-Pages.git ../BlackJackGame-Pages
+git -C ../BlackJackGame-Pages pull --ff-only
 rsync -a --delete --exclude='.git' dist/ ../BlackJackGame-Pages/
 touch ../BlackJackGame-Pages/.nojekyll
 git -C ../BlackJackGame-Pages add --all
