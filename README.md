@@ -46,4 +46,4 @@ The local preview runs at `http://localhost:5173/` by default. The app is playab
 
 ## Published Game
 
-Play the game at [yuksekalim.github.io/BlackJackGame](https://yuksekalim.github.io/BlackJackGame/). The public source repository is [yuksekalim/BlackJackGame](https://github.com/yuksekalim/BlackJackGame). GitHub Actions builds and publishes the game from the codex/blackjack-mvp branch. See [Deployment](docs/DEPLOYMENT.md) for the publishing setup.
+Play the game at [yuksekalim.github.io/BlackJackGame](https://yuksekalim.github.io/BlackJackGame/). The public source is [yuksekalim/BlackJackGame](https://github.com/yuksekalim/BlackJackGame); GitHub Pages serves the built site from its `gh-pages` branch. See [Deployment](docs/DEPLOYMENT.md) for publishing updates.
