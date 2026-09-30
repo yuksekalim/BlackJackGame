@@ -1,19 +1,17 @@
-# Blackjack deck artwork prototype
+# Blackjack deck artwork
 
-This is an original, scalable SVG deck based on the broad art direction Alim chose: warm ivory faces, navy and red suits, Japanese-inspired court characters, and a consistent card back. The low-resolution reference image was used only for general visual direction; none of its card artwork was copied, enlarged, or cropped.
+An original, scalable SVG deck in the Japanese-inspired direction Alim chose: warm ivory card faces, restrained navy and red suits, mirrored court characters, and one uniform back. The supplied low-resolution reference image was used only for broad visual direction; none of its card art was copied or enlarged.
 
 ## Files
 
-- `faces/<suit>-<rank>.svg` — 52 self-contained card faces, for example `faces/hearts-Q.svg` and `faces/spades-10.svg`.
-- `back.svg` — one uniform navy patterned back for every hidden card.
-- `preview.html` — browser gallery of all 53 SVGs; open this file locally to inspect the deck.
-- `contact-sheet.svg` — one self-contained vector overview of the faces and back.
-- `generate_deck.py` — standard-library Python generator; regenerate with `python3 generate_deck.py`.
+- `faces/<suit>-<rank>.svg` — 52 self-contained face cards.
+- `back.svg` — one uniform patterned back for every hidden card.
+- `contact-sheet.svg` and `contact-sheet.png` — overview of all 52 faces and the back.
+- `preview.html` — browser gallery with individual files.
+- `generate_deck.py` — standard-library Python generator for all face SVGs, the back, vector contact sheet, and HTML gallery; regenerate with `python3 generate_deck.py`.
 
 ## Design and sizing
 
-Each SVG uses a 250 × 350 viewBox (5:7 poker-card ratio) and declares a 63.5 × 88.9 mm intrinsic size. The artwork stays vector at any display or print size. Corner indices show both rank and suit in opposite corners; number-card pips follow conventional arrangements. J, Q, and K have mirrored original vector figures: an armored samurai page, a court lady with a fan, and a shogun. The back uses one rotationally balanced crest over a geometric lattice.
+Each card has a 250 × 350 viewBox (5:7 ratio) and a 63.5 × 88.9 mm intrinsic size, so its lines and lettering stay crisp when enlarged. J, Q, and K retain their original mirrored samurai page, court lady, and shogun silhouettes, with clearer faces, costume panels, and suit-specific embroidery. The back keeps its navy, gold, and red identity with a more legible geometric lattice.
 
-## Checks and current limits
-
-The generator creates exactly 52 face SVGs plus `back.svg`; all 54 SVG documents (including the contact sheet) parse as XML. The art is a prototype for product review: court portraits are intentionally stylized and reused by rank across suits with suit-specific colors and emblems. The card border has no print bleed or crop marks, so production print files would need those added if physical printing becomes a requirement.
+`contact-sheet.png` is a rendered convenience preview of the current vector contact sheet; the SVG assets are the source of truth. The deck is still stylized vector art; it has no print bleed or crop marks, which would be needed for physical printing.

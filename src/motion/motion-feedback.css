@@ -1,0 +1,109 @@
+/*
+ * Optional UI hooks for changing chip/bankroll values and entering results.
+ * Set data-motion-pulse to alternating values ('a' / 'b') for each new event;
+ * changing the animation name retriggers the same restrained pulse.
+ */
+.motion-chip-count {
+  display: inline-block;
+  transform-origin: center;
+}
+
+.motion-chip-count[data-motion-pulse='a'] {
+  animation: motion-chip-pulse-a 260ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+.motion-chip-count[data-motion-pulse='b'] {
+  animation: motion-chip-pulse-b 260ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+.motion-result-entry[data-motion-pulse='a'] {
+  animation: motion-result-enter-a 360ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+.motion-result-entry[data-motion-pulse='b'] {
+  animation: motion-result-enter-b 360ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+@keyframes motion-chip-pulse-a {
+  0%,
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+
+  38% {
+    filter: brightness(1.1);
+    transform: scale(1.045);
+  }
+}
+
+@keyframes motion-chip-pulse-b {
+  0%,
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+
+  38% {
+    filter: brightness(1.1);
+    transform: scale(1.045);
+  }
+}
+
+@keyframes motion-result-enter-a {
+  0% {
+    opacity: 0;
+    transform: translateY(7px) scale(0.985);
+  }
+
+  72% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes motion-result-enter-b {
+  0% {
+    opacity: 0;
+    transform: translateY(7px) scale(0.985);
+  }
+
+  72% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+[data-motion-speed='fast'] .motion-chip-count[data-motion-pulse],
+.motion-chip-count[data-motion-speed='fast'][data-motion-pulse] {
+  animation-duration: 150ms;
+}
+
+[data-motion-speed='fast'] .motion-result-entry[data-motion-pulse],
+.motion-result-entry[data-motion-speed='fast'][data-motion-pulse] {
+  animation-duration: 210ms;
+}
+
+[data-motion-speed='instant'] .motion-chip-count[data-motion-pulse],
+[data-motion-speed='instant'] .motion-result-entry[data-motion-pulse],
+.motion-chip-count[data-motion-speed='instant'][data-motion-pulse],
+.motion-result-entry[data-motion-speed='instant'][data-motion-pulse] {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-chip-count[data-motion-pulse],
+  .motion-result-entry[data-motion-pulse] {
+    animation: none !important;
+  }
+}

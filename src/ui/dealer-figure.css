@@ -1,0 +1,23 @@
+.dealer-figure-stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: end center;
+  flex: 0 0 auto;
+  width: 100%;
+  height: clamp(105px, 24vw, 240px);
+  min-height: 105px;
+  margin: 0 auto;
+  pointer-events: none;
+  container-type: size;
+}
+
+.dealer-figure__artboard {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 100%;
+  width: auto;
+  aspect-ratio: 1391 / 1230;
+  transform: translateX(-50%);
+}

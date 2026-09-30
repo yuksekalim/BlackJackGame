@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #081e21; }
+    #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: Georgia, "Times New Roman", serif; color: #f5efde; }
+    .scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+    .scene-surface { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 56% 46%, #17694f 0%, #115c46 43%, #0d4a3b 100%); }
+    .scene-surface::before { content: ""; position: absolute; inset: 32px; border: 2px solid rgba(235,213,159,.43); border-radius: 42px; box-shadow: inset 0 0 0 9px rgba(4,36,30,.15); }
+    .scene-surface::after { content: ""; position: absolute; width: 1220px; height: 650px; left: 360px; top: 316px; border: 2px solid rgba(226,203,144,.15); border-radius: 50%; }
+    .scene-content { position: relative; z-index: 5; display: flex; flex-direction: column; width: 100%; height: 100%; padding: 88px 102px 90px; gap: 26px; }
+    .masthead { display: flex; align-items: center; gap: 22px; min-height: 75px; font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: .18em; color: #ead297; }
+    .brand-mark { display: grid; place-items: center; width: 74px; height: 74px; border: 2px solid #ead297; border-radius: 50%; font-family: Georgia, serif; font-size: 37px; font-weight: normal; letter-spacing: 0; }
+    .scene-copy { display: flex; flex-direction: column; justify-content: center; width: 760px; flex: 1; gap: 24px; }
+    .eyebrow { margin: 0; font-family: Arial, sans-serif; font-size: 25px; font-weight: 700; letter-spacing: .24em; color: #ead297; }
+    h1 { margin: 0; font-size: 132px; line-height: .97; font-weight: normal; letter-spacing: -.05em; color: #fff9e9; text-shadow: 0 8px 26px rgba(5,23,24,.17); }
+    .support { margin: 0; width: 630px; font-size: 33px; line-height: 1.25; color: #e7ddc5; }
+    .rule { width: 560px; height: 2px; background: #ead297; transform-origin: left center; }
+    .score-pill { align-self: flex-start; padding: 17px 28px; border: 2px solid rgba(235,213,159,.55); border-radius: 999px; background: rgba(4,39,31,.38); font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: .12em; color: #f4d690; }
+    .score-pill.loss { color: #ffb5a7; border-color: rgba(255,181,167,.5); }
+    .footer { display: flex; gap: 24px; align-items: center; font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: .17em; color: #d9cda9; }
+    .footer-line { width: 82px; height: 2px; background: #ead297; }
+    .figure { position: absolute; z-index: 4; width: 900px; height: 796px; left: 943px; top: 158px; transform-origin: 50% 52%; will-change: transform; filter: drop-shadow(0 32px 24px rgba(5,18,18,.24)); }
+    .pose { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; opacity: 0; }
+    .pose[data-pose="dealer-idle"] { opacity: 1; }
+    #transition-cover { position: absolute; z-index: 30; inset: 0; background: #081e21; opacity: 0; pointer-events: none; }
+    .card-flight { position: absolute; z-index: 8; left: 1240px; top: 760px; width: 118px; height: 165px; opacity: 0; filter: drop-shadow(0 20px 12px rgba(3,27,21,.35)); transform-origin: center; }
+    .card-flight img { display: block; width: 100%; height: 100%; }
+    .card-rest { position: absolute; z-index: 2; left: 590px; top: 804px; width: 118px; height: 165px; border: 2px solid rgba(239,219,167,.35); border-radius: 9px; transform: rotate(20deg); }
+  </style>
+</head>
+<body>
+<div data-hf-id="hf-7z65" id="root" data-composition-id="dealer-gestures" data-start="0" data-duration="8.4" data-width="1920" data-height="1080">
+  <section data-hf-id="hf-3sif" id="scene-deal" class="clip scene" data-start="0" data-duration="2.95" data-track-index="0">
+    <div data-hf-id="hf-leem" class="scene-surface">
+      <div data-hf-id="hf-xuwa" class="card-rest" aria-hidden="true"></div>
+      <div data-hf-id="hf-o8wh" class="figure" aria-hidden="true">
+            <img data-hf-id="hf-xy7w" class="pose" data-pose="dealer-idle" src="assets/dealer-idle.png" alt="">
+            <img data-hf-id="hf-co9q" class="pose" data-pose="dealer-deal-near" src="assets/dealer-deal-near.png" alt="">
+            <img data-hf-id="hf-ye3w" class="pose" data-pose="dealer-deal-early" src="assets/dealer-deal-early.png" alt="">
+            <img data-hf-id="hf-c36m" class="pose" data-pose="dealer-deal-between" src="assets/dealer-deal-between.png" alt="">
+            <img data-hf-id="hf-ikve" class="pose" data-pose="dealer-deal-mid" src="assets/dealer-deal-mid.png" alt="">
+            <img data-hf-id="hf-6onu" class="pose" data-pose="dealer-deal-late" src="assets/dealer-deal-late.png" alt="">
+            <img data-hf-id="hf-16t8" class="pose" data-pose="dealer-deal" src="assets/dealer-deal.png" alt="">
+      </div>
+      <div data-hf-id="hf-db6t" id="card-flight" class="card-flight" aria-hidden="true"><img data-hf-id="hf-iso6" src="assets/card-back.svg" alt=""></div>
+      <div data-hf-id="hf-cn5c" class="scene-content">
+        <div data-hf-id="hf-ukjd" class="masthead"><div data-hf-id="hf-pfgl" class="brand-mark" data-layout-allow-overlap="">♠</div><span data-hf-id="hf-ncnf" data-layout-allow-overlap="">BLACKJACK · HOUSE MOTION</span></div>
+        <div data-hf-id="hf-bney" class="scene-copy">
+          <p data-hf-id="hf-47ma" class="eyebrow">01 / THE GESTURE</p>
+          <h1 data-hf-id="hf-m80t">THE DEAL</h1>
+          <div data-hf-id="hf-a46i" class="rule"></div>
+          <p data-hf-id="hf-k5u1" class="support">One complete figure. A card travels from the dealer’s hand to the felt.</p>
+        </div>
+        <div data-hf-id="hf-3kxo" class="footer"><span data-hf-id="hf-5xa3" class="footer-line"></span>DEAL · 42 FRAMES / 60 FPS</div>
+      </div>
+    </div>
+  </section>
+  <section data-hf-id="hf-4052" id="scene-win" class="clip scene" data-start="2.95" data-duration="2.75" data-track-index="1">
+    <div data-hf-id="hf-dl4i" class="scene-surface">
+      <div data-hf-id="hf-ydmt" class="figure" aria-hidden="true">
+            <img data-hf-id="hf-nth0" class="pose" data-pose="dealer-idle" src="assets/dealer-idle.png" alt="">
+            <img data-hf-id="hf-n2xm" class="pose" data-pose="dealer-player-win-near" src="assets/dealer-player-win-near.png" alt="">
+            <img data-hf-id="hf-ahwq" class="pose" data-pose="dealer-player-win-middle" src="assets/dealer-player-win-middle.png" alt="">
+            <img data-hf-id="hf-ti9m" class="pose" data-pose="dealer-player-win-between" src="assets/dealer-player-win-between.png" alt="">
+            <img data-hf-id="hf-tw56" class="pose" data-pose="dealer-player-win-late" src="assets/dealer-player-win-late.png" alt="">
+            <img data-hf-id="hf-gvh0" class="pose" data-pose="dealer-player-win" src="assets/dealer-player-win.png" alt="">
+      </div>
+      <div data-hf-id="hf-o0eg" class="scene-content">
+        <div data-hf-id="hf-4thp" class="masthead"><div data-hf-id="hf-oee1" class="brand-mark" data-layout-allow-overlap="">♠</div><span data-hf-id="hf-xru3" data-layout-allow-overlap="">BLACKJACK · HOUSE MOTION</span></div>
+        <div data-hf-id="hf-ai32" class="scene-copy">
+          <p data-hf-id="hf-tv7r" class="eyebrow" data-layout-allow-overlap="">02 / PLAYER RESULT</p>
+          <h1 data-hf-id="hf-f0hk">PLAYER<br data-hf-id="hf-x5px">WINS</h1>
+          <div data-hf-id="hf-ya9a" class="rule"></div>
+          <p data-hf-id="hf-toyy" class="support">The dealer settles into a disappointed pose.</p>
+          <div data-hf-id="hf-r4yl" class="score-pill">PLAYER VICTORY</div>
+        </div>
+        <div data-hf-id="hf-m2dy" class="footer"><span data-hf-id="hf-vrsr" class="footer-line"></span>REACTION · PLAYER WIN</div>
+      </div>
+    </div>
+  </section>
+  <section data-hf-id="hf-35ht" id="scene-loss" class="clip scene" data-start="5.7" data-duration="2.7" data-track-index="2">
+    <div data-hf-id="hf-dzfj" class="scene-surface">
+      <div data-hf-id="hf-zkjw" class="figure" aria-hidden="true">
+            <img data-hf-id="hf-mmjx" class="pose" data-pose="dealer-idle" src="assets/dealer-idle.png" alt="">
+            <img data-hf-id="hf-bjks" class="pose" data-pose="dealer-player-loss-near" src="assets/dealer-player-loss-near.png" alt="">
+            <img data-hf-id="hf-mwd6" class="pose" data-pose="dealer-player-loss-middle" src="assets/dealer-player-loss-middle.png" alt="">
+            <img data-hf-id="hf-usyu" class="pose" data-pose="dealer-player-loss" src="assets/dealer-player-loss.png" alt="">
+      </div>
+      <div data-hf-id="hf-mthd" class="scene-content">
+        <div data-hf-id="hf-60es" class="masthead"><div data-hf-id="hf-plb4" class="brand-mark" data-layout-allow-overlap="">♠</div><span data-hf-id="hf-xdj2" data-layout-allow-overlap="">BLACKJACK · HOUSE MOTION</span></div>
+        <div data-hf-id="hf-awe3" class="scene-copy">
+          <p data-hf-id="hf-f824" class="eyebrow" data-layout-allow-overlap="">03 / DEALER RESULT</p>
+          <h1 data-hf-id="hf-k20k">DEALER<br data-hf-id="hf-rsrt">WINS</h1>
+          <div data-hf-id="hf-yokb" class="rule"></div>
+          <p data-hf-id="hf-poao" class="support">A distinct, celebratory reaction closes the round.</p>
+          <div data-hf-id="hf-oid5" class="score-pill loss">PLAYER LOSS</div>
+        </div>
+        <div data-hf-id="hf-p1pj" class="footer"><span data-hf-id="hf-vdhq" class="footer-line"></span>REACTION · PLAYER LOSS</div>
+      </div>
+    </div>
+  </section>
+  <div id="transition-cover" data-layout-ignore aria-hidden="true"></div>
+</div>
+<script>
+  // All pose changes are exact cuts between complete figures. Never dissolve adjacent poses.
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["dealer-gestures"] = tl;
+
+  function poseSequence(scene, start, frames) {
+    // The idle cel is visible in CSS. Turn on the next intact cel just before
+    // clearing the previous one, so exact frame-boundary seeks never go blank.
+    for (let i = 1; i < frames.length; i += 1) {
+      const [pose, frame] = frames[i];
+      const previous = frames[i - 1][0];
+      const at = start + frame / 60;
+      tl.set(`${scene} .pose[data-pose="${pose}"]`, { opacity: 1 }, at - 0.0001);
+      tl.set(`${scene} .pose[data-pose="${previous}"]`, { opacity: 0 }, at);
+    }
+  }
+
+  // Remotion's 42-frame deal order and timing, including the full extension at frame 17.
+  poseSequence("#scene-deal", 0.55, [
+    ["dealer-idle", 0], ["dealer-deal-near", 2], ["dealer-deal-early", 5],
+    ["dealer-deal-between", 8], ["dealer-deal-mid", 11], ["dealer-deal-late", 14],
+    ["dealer-deal", 17], ["dealer-deal-late", 27], ["dealer-deal-mid", 30],
+    ["dealer-deal-between", 33], ["dealer-deal-early", 36], ["dealer-deal-near", 38],
+    ["dealer-idle", 40]
+  ]);
+  poseSequence("#scene-win", 3.3, [
+    ["dealer-idle", 0], ["dealer-player-win-near", 3], ["dealer-player-win-middle", 7],
+    ["dealer-player-win-between", 11], ["dealer-player-win-late", 15],
+    ["dealer-player-win", 19]
+  ]);
+  poseSequence("#scene-loss", 6.05, [
+    ["dealer-idle", 0], ["dealer-player-loss-near", 4],
+    ["dealer-player-loss-middle", 8], ["dealer-player-loss", 13]
+  ]);
+
+  // The moving card emerges from the extended hand and settles on the player side.
+  tl.fromTo("#card-flight", { x: 0, y: 0, rotation: -16, scale: 0.68, opacity: 0 },
+    { x: -650, y: 44, rotation: 20, scale: 1, opacity: 1, duration: 0.5, ease: "power3.out", immediateRender: false }, 0.55 + 17 / 60);
+  tl.to("#scene-deal .figure", { y: 5, rotation: 1.1, duration: 0.22, ease: "sine.inOut" }, 0.72);
+  tl.to("#scene-deal .figure", { y: 0, rotation: 0, duration: 0.29, ease: "power2.out" }, 0.96);
+  tl.to("#scene-win .figure", { y: 8, rotation: -0.9, duration: 0.36, ease: "sine.inOut" }, 3.37);
+  tl.to("#scene-loss .figure", { y: -10, rotation: 1.1, duration: 0.32, ease: "back.out(1.2)" }, 6.12);
+  tl.to("#scene-loss .figure", { y: -5, rotation: 0.5, duration: 0.34, ease: "sine.out" }, 6.44);
+
+  // Opaque color dips hide the scene swap. No two different full-figure poses blend.
+  tl.to("#transition-cover", { opacity: 1, duration: 0.2, ease: "power2.in" }, 2.75);
+  tl.to("#transition-cover", { opacity: 0, duration: 0.25, ease: "power2.out" }, 2.95);
+  tl.to("#transition-cover", { opacity: 1, duration: 0.2, ease: "power2.in" }, 5.5);
+  tl.to("#transition-cover", { opacity: 0, duration: 0.25, ease: "power2.out" }, 5.7);
+
+  // Scene entrances start under the cover and resolve into an unobscured pose.
+  tl.from("#scene-deal .masthead", { y: -22, opacity: 0, duration: 0.52, ease: "power3.out" }, 0.15);
+  tl.from("#scene-deal .eyebrow", { x: -32, opacity: 0, duration: 0.42, ease: "expo.out" }, 0.27);
+  tl.from("#scene-deal h1", { y: 44, opacity: 0, duration: 0.65, ease: "power4.out" }, 0.33);
+  tl.from("#scene-deal .rule", { scaleX: 0, duration: 0.51, ease: "power2.out" }, 0.49);
+  tl.from("#scene-deal .support", { y: 30, opacity: 0, duration: 0.48, ease: "sine.out" }, 0.63);
+  tl.from("#scene-deal .footer", { opacity: 0, duration: 0.5, ease: "power1.out" }, 0.72);
+
+  tl.from("#scene-win .masthead", { y: -22, opacity: 0, duration: 0.41, ease: "power3.out" }, 3.02);
+  tl.from("#scene-win .eyebrow", { x: -35, opacity: 0, duration: 0.39, ease: "expo.out" }, 2.98);
+  tl.from("#scene-win h1", { y: 45, opacity: 0, duration: 0.54, ease: "power4.out" }, 3.07);
+  tl.from("#scene-win .rule", { scaleX: 0, duration: 0.4, ease: "power2.out" }, 3.15);
+  tl.from("#scene-win .support", { y: 26, opacity: 0, duration: 0.42, ease: "sine.out" }, 3.24);
+  tl.from("#scene-win .score-pill", { scale: 0.87, opacity: 0, duration: 0.47, ease: "back.out(1.3)" }, 3.49);
+  tl.from("#scene-win .footer", { opacity: 0, duration: 0.44, ease: "power1.out" }, 3.6);
+
+  tl.from("#scene-loss .masthead", { y: -22, opacity: 0, duration: 0.41, ease: "power3.out" }, 5.78);
+  tl.from("#scene-loss .eyebrow", { x: -35, opacity: 0, duration: 0.39, ease: "expo.out" }, 5.73);
+  tl.from("#scene-loss h1", { y: 45, opacity: 0, duration: 0.54, ease: "power4.out" }, 5.82);
+  tl.from("#scene-loss .rule", { scaleX: 0, duration: 0.4, ease: "power2.out" }, 5.9);
+  tl.from("#scene-loss .support", { y: 26, opacity: 0, duration: 0.42, ease: "sine.out" }, 5.99);
+  tl.from("#scene-loss .score-pill", { scale: 0.87, opacity: 0, duration: 0.47, ease: "back.out(1.3)" }, 6.24);
+  tl.from("#scene-loss .footer", { opacity: 0, duration: 0.44, ease: "power1.out" }, 6.35);
+</script>
+</body>
+</html>

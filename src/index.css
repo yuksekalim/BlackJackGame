@@ -1,0 +1,11 @@
+:root {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #f7f2e2;
+  background: #132d2c;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+.app-shell { min-height: 100vh; display: grid; align-content: center; justify-items: center; padding: 2rem; text-align: center; }
+.eyebrow { color: #d0aa60; letter-spacing: .2em; text-transform: uppercase; }

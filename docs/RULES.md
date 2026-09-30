@@ -10,16 +10,21 @@
 | Player actions | Hit, stand, double, split |
 | Insurance and surrender | Not included initially |
 | Wagers | Virtual chips only |
+| Five cards | A side reaching five cards wins the whole round if that five-card hand is 21 or less; a fifth-card bust loses |
 
 Display these rules in the game. The rules engine must be deterministic under an injected shuffle/random source for testing.
 
-## Proposed Defaults to Finalize Before Engine Work
+## MVP Implementation Defaults
 
-- A natural is an initial two-card ace plus ten-value card; a 21 after splitting is an ordinary 21.
+- A natural is an initial two-card ace plus ten-value card; a 21 after splitting is an ordinary 21. Naturals settle immediately, before either side can reach five cards.
+- The five-card house rule settles the whole round immediately when a player hand or the dealer receives a fifth card. If that hand totals 21 or less, its side wins; if the fifth card makes it bust, the other side wins. If a split player hand reaches five cards, both committed hands share the resulting side outcome: both pay as ordinary wins on a valid five-card hand, or both lose on a fifth-card bust. A dealer fifth card settles every player hand as a loss when the dealer total is 21 or less, and as a win when the dealer busts. Earlier busts and ordinary 21 progression still end a player hand before it can reach five. This is a custom house rule.
 - Dealer checks for a natural before player actions. If both have naturals, the hand pushes.
 - Double is allowed on the first two cards of a hand, including a split hand; it draws exactly one card and then stands.
 - Split once into two hands when the initial ranks match. Split aces receive one card each and then stand. No resplitting in the first release.
 - Dealer draws to 17 and stands on all 17s. Compare each surviving player hand independently; a tie pushes.
-- Shoe reshuffle threshold, minimum/maximum bet, starting bankroll, and bankroll reset behavior remain open product settings.
+- Start with 1,000 virtual chips. Allow bets from 10 upward in increments of 10, limited by available bankroll.
+- Deduct each stake when committed. Return twice the stake for an ordinary win, 2.5 times for a natural blackjack, the stake for a push, and zero for a loss. A double or split commits the additional stake before it receives cards.
+- Keep the shoe between rounds and reshuffle all six decks before a round when fewer than 52 cards remain. A new game resets the shoe and bankroll.
+- Double or split is unavailable when the bankroll cannot cover the additional stake. Dealer play is skipped when every player hand has busted.
 
-These detailed defaults are proposals, not yet approved rules. Record any change here before implementation and mirror it in the in-game rules panel and tests.
+These are Dora's implementation choices within the accepted first-release rules, not additional rules explicitly chosen by Alim. Mirror them in the in-game rules panel and tests; revise them if Alim chooses a different house rule.
